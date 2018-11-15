@@ -5,42 +5,43 @@ import * as React from "react";
 import "./index.scss";
 
 // custom components
-import Calendar from "../../../components/datepicker/Calendar";
+import Calendar from "../../components/datepicker/Calendar";
 
-class Iday extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      toggleCalender: true,
-      minDate: new Date(2018, 8, 21),
-      maxDate: new Date(2018, 9, 2),
-      singleDate: new Date(2018, 9, 15)
-    };
+export default class UseCalendar extends React.Component {
+  state = {
+    toggleCalender: false,
+    minDate: new Date(2018, 8, 21),
+    maxDate: new Date(2018, 9, 2),
+    singleDate: new Date(2018, 9, 15)
+  };
 
-    this.dayConfig = {
-      20180601: {
-        title: "¥1262"
-      },
-      20180602: {
-        title: "¥99"
-      },
-      20180604: {
-        title: "¥888"
-      },
-      20180605: {
-        title: "¥998",
-        disable: true
-      },
-      20180618: {
-        title: "¥123"
-      },
-      20180903: {
-        title: "¥228"
-      },
-      20180910: {
-        title: "¥998"
-      }
-    };
+  dayConfig = {
+    20180601: {
+      title: "¥1262"
+    },
+    20180602: {
+      title: "¥99"
+    },
+    20180604: {
+      title: "¥888"
+    },
+    20180605: {
+      title: "¥998",
+      disable: true
+    },
+    20180618: {
+      title: "¥123"
+    },
+    20180903: {
+      title: "¥228"
+    },
+    20180910: {
+      title: "¥998"
+    }
+  };
+
+  componentDidMount() {
+    this.toggleHandler(true);
   }
 
   selectedHandler = date => {
@@ -84,7 +85,7 @@ class Iday extends React.Component {
           visible={toggleCalender}
           calendarType={2}
           fullScreen={false}
-          isBareShell={false}
+          isBareShell={true}
           toRoof={"3rem"}
           title="请选择日期test"
           dayConfig={this.dayConfig}
@@ -96,4 +97,3 @@ class Iday extends React.Component {
     );
   }
 }
-export default Iday;

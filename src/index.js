@@ -1,27 +1,23 @@
 import React from "react";
-import { render } from "react-dom";
+import ReactDOM, { render } from "react-dom";
 import "./index.css";
 import App from "./pages/App.js";
-import ctrip from "@ctrip/easy";
-import { NestRem } from "@ctrip/nest";
+import Rem from "./common/js/rem";
+import { isInIOS, isInWechat } from "./common/js/utils";
 import registerServiceWorker from "./registerServiceWorker";
 
-if (ctrip.isInIOS()) {
+if (isInIOS()) {
   document.body.classList.add("ios");
 }
 
-if (ctrip.isInWechat()) {
+if (isInWechat()) {
   document.body.classList.add("wechat");
 }
 
-ctrip.ready(() => {
-  render(
-    <NestRem vw="10" pixel>
-      <App />
-    </NestRem>,
-    document.getElementById("root")
-  );
-});
-
-// ReactDOM.render(<App />, document.getElementById('root'));
+ReactDOM.render(
+  <Rem vw="10" pixel>
+    <App />
+  </Rem>,
+  document.getElementById("root")
+);
 registerServiceWorker();

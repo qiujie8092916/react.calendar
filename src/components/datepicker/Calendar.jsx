@@ -1,7 +1,7 @@
 import React, { Fragment } from "react";
 import moment from "moment";
+import axios from "axios";
 import { isEmpty } from "lodash";
-import ctrip from "@ctrip/easy";
 import Animate from "rc-animate";
 import PropType from "./propTypes";
 import { Context } from "./context";
@@ -192,14 +192,19 @@ class Calendar extends React.Component {
       JSON.parse(holiday_cache).queryYear != moment().year()
     ) {
       return new Promise((resolve, reject) => {
-        ctrip
-          .model("12378", "prod")("getGeneralConfigData", { key: "Holiday" })
-          .then(r => {
-            if (r.rspJsonStr) {
+        axios
+          .post(
+            "http://m.ctrip.com/restapi/soa2/12378/json/getGeneralConfigData",
+            {
+              key: "Holiday"
+            }
+          )
+          .then(({ data }) => {
+            if (data.rspJsonStr) {
               let holidays;
               try {
                 holidays = JSON.parse(
-                  JSON.parse(r.rspJsonStr).configList[0].configContent
+                  JSON.parse(data.rspJsonStr).configList[0].configContent
                 ).Holiday;
               } catch (e) {
                 reject(e);
@@ -219,11 +224,8 @@ class Calendar extends React.Component {
               XPathResult;
               resolve(this.holidayConvert(_holidays));
             } else {
-              reject(r.errMsg);
+              reject(data.errMsg);
             }
-          })
-          .catch(e => {
-            reject(e);
           });
       });
     } else {

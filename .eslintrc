@@ -1,0 +1,14 @@
+{
+  "extends": ["standard", "standard-react"],
+  "globals": {
+    "$": true,
+    "process": true,
+    "__dirname": true
+  },
+  "parser": "babel-eslint",
+  "plugins": ["react"],
+  "rules": {
+    "quotes": [2, "single"],
+    "semi": 2
+  }
+}

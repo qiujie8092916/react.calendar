@@ -1,14 +1,12 @@
 import React, { Component } from "react";
 import "./App.scss";
-import Iday from "./iday/index";
-import Line from "./line/index";
+import UseCalendar from "./useCalendar";
 
 class App extends Component {
   render() {
     return (
       <div>
-        <Iday />
-        <Line />
+        <UseCalendar />
       </div>
     );
   }
