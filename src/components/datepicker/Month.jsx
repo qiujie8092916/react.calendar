@@ -1,7 +1,6 @@
 import React from "react";
 import moment from "moment";
-import { isNull, isUndefined } from "lodash";
-import { Context } from "./context";
+import { isNull } from "lodash";
 import { SelectedType } from "./selectedType";
 
 import MonthDays from "./MonthDays.jsx";
@@ -21,23 +20,23 @@ class Month extends React.Component {
     // console.timeEnd("did update Datepicker -> should update Month");
     let shouldUpdate = false;
     const curSelected =
-        this.props.conf.selectType === 1
-          ? this.props.selectedDate.clone()
-          : [
-              this.props.selectedDates[0].clone(),
-              this.props.selectedDates[1]
-                ? this.props.selectedDates[1].clone()
-                : null
-            ],
-      nextSelected =
-        this.props.conf.selectType === 1
-          ? nextProps.selectedDate.clone()
-          : [
-              nextProps.selectedDates[0].clone(),
-              nextProps.selectedDates[1]
-                ? nextProps.selectedDates[1].clone()
-                : null
-            ];
+      this.props.conf.selectType === 1
+        ? this.props.selectedDate.clone()
+        : [
+          this.props.selectedDates[0].clone(),
+          this.props.selectedDates[1]
+            ? this.props.selectedDates[1].clone()
+            : null
+        ];
+    const nextSelected =
+      this.props.conf.selectType === 1
+        ? nextProps.selectedDate.clone()
+        : [
+          nextProps.selectedDates[0].clone(),
+          nextProps.selectedDates[1]
+            ? nextProps.selectedDates[1].clone()
+            : null
+        ];
 
     switch (this.props.conf.selectType) {
       case 1:
@@ -54,22 +53,20 @@ class Month extends React.Component {
           (!curSelected[0].isSame(nextSelected[0]) ||
             (curSelected[1] && nextSelected[1]
               ? !curSelected[1].isSame(nextSelected[1])
-              : !curSelected[1] && !nextSelected[1]
-              ? false
-              : true)) &&
+              : !(!curSelected[1] && !nextSelected[1]))) &&
           ((curSelected[1]
             ? moment(this.props.month).isBetween(
-                curSelected[0].subtract(1, "M"),
-                curSelected[1].add(1, "M"),
-                "month"
-              )
+              curSelected[0].subtract(1, "M"),
+              curSelected[1].add(1, "M"),
+              "month"
+            )
             : moment(this.props.month).isSame(curSelected[0], "month")) ||
             (nextSelected[1]
               ? moment(this.props.month).isBetween(
-                  nextSelected[0].subtract(1, "M"),
-                  nextSelected[1].add(1, "M"),
-                  "month"
-                )
+                nextSelected[0].subtract(1, "M"),
+                nextSelected[1].add(1, "M"),
+                "month"
+              )
               : moment(this.props.month).isSame(nextSelected[0], "month")))
         ) {
           shouldUpdate = true;
@@ -90,13 +87,13 @@ class Month extends React.Component {
   leftPad = val => (val.length === 1 ? `0${val}` : val);
 
   genCurStyle = timestamp => {
-    const { conf } = this.props,
-      { SELECTEDTYPE } = this,
-      ts = moment(timestamp),
-      oldSelectDate =
-        conf.selectType === 1
-          ? this.props.selectedDate
-          : this.props.selectedDates;
+    const { conf } = this.props;
+    const { SELECTEDTYPE } = this;
+    const ts = moment(timestamp);
+    const oldSelectDate =
+      conf.selectType === 1
+        ? this.props.selectedDate
+        : this.props.selectedDates;
     let curStyle = SELECTEDTYPE.None;
 
     if (conf.selectType === 1) {
@@ -125,8 +122,8 @@ class Month extends React.Component {
       // console.time("render Month -> will update MonthOfDays");
       const dayfrmat = moment(timestamp).format("YYYYMMDD");
       const { conf, minDate, maxDate, dayConfig, holidays } = this.props;
-      const _minDate = minDate.clone(),
-        _maxDate = maxDate.clone();
+      const minDateClone = minDate.clone();
+      const maxDateClone = maxDate.clone();
 
       return (
         <MonthDays
@@ -137,8 +134,8 @@ class Month extends React.Component {
           selectedType={this.genCurStyle(timestamp)}
           holiday={holidays[moment(timestamp).format("YYYYMMDD")]}
           isDisabled={
-            !moment(timestamp).isAfter(_minDate.subtract(1, "day")) ||
-            !moment(timestamp).isBefore(_maxDate.add(1, "day")) ||
+            !moment(timestamp).isAfter(minDateClone.subtract(1, "day")) ||
+            !moment(timestamp).isBefore(maxDateClone.add(1, "day")) ||
             (dayConfig && dayConfig[dayfrmat] && dayConfig[dayfrmat].disable)
           }
         />
@@ -158,29 +155,29 @@ class Month extends React.Component {
   }
 
   render() {
-    const { month, banner, conf, monthRef } = this.props,
-      curMonth = moment(month), //当前月
-      dayOfMonth = curMonth.daysInMonth(), //当前月总共多少天
-      everyDayOfMonth = [...Array(dayOfMonth + 1).keys()];
+    const { conf, month } = this.props;
+    const curMonth = moment(month); // 当前月
+    const dayOfMonth = curMonth.daysInMonth(); // 当前月总共多少天
+    const everyDayOfMonth = [...Array(dayOfMonth + 1).keys()];
 
     return (
-      <div className="months" ref={el => (this.els._self = el)}>
+      <div className='months' ref={el => (this.els._self = el)}>
         {conf.calendarType === 1 && (
           <div
-            className="month-banner flex stc"
+            className='month-banner flex stc'
             style={{
               top: 0
             }}
-            flex="center"
+            flex='center'
           >
             {curMonth.format("YYYY年MM月")}
           </div>
         )}
-        <div className="month-cont flex" flex="">
+        <div className='month-cont flex' flex=''>
           {everyDayOfMonth.slice(1).map((it, idx) => {
-            let curDay = moment(`${month}-${this.leftPad(String(it))}`), //当前月当前天
-              dayOfWeek = curDay.day(),
-              timestamp = curDay.valueOf();
+            let curDay = moment(`${month}-${this.leftPad(String(it))}`); // 当前月当前天
+            let dayOfWeek = curDay.day();
+            let timestamp = curDay.valueOf();
             if (idx === 0 && dayOfWeek !== 0) {
               const emptyDay = [...Array(dayOfWeek).keys()].map((item, index) =>
                 this.getMonthDay(index, true)

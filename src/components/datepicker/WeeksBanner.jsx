@@ -2,7 +2,7 @@ import React from "react";
 
 class WeeksBanner extends React.PureComponent {
   render() {
-    let { hasTip, weekHeight, weeks } = this.props;
+    let { weekHeight, weeks } = this.props;
     return (
       <div
         className="weeks flex"
@@ -14,9 +14,8 @@ class WeeksBanner extends React.PureComponent {
           return (
             <span
               key={idx}
-              flex="1"
               className="flex"
-              flex="v-center around"
+              flex="1 v-center around"
               style={{
                 color:
                   idx === 0 || idx === weeks.length - 1 ? "#ff5722" : "#333"

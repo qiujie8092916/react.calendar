@@ -52,15 +52,16 @@ export default class UseCalendar extends React.Component {
     // Array.isArray(data)
     //   ? console.log(`confirm: ${data[0].std}, ${data[1].std}`)
     //   : console.log(data.std);
-    if (Array.isArray(data))
+    if (Array.isArray(data)) {
       this.setState({
         minDate: data[0].date,
         maxDate: data[1].date
       });
-    else
+    } else {
       this.setState({
         singleDate: data.date
       });
+    }
   };
 
   toggleHandler = status => {
@@ -81,13 +82,13 @@ export default class UseCalendar extends React.Component {
           selectType={2}
           selectedDate={singleDate}
           selectedDates={[minDate, maxDate]}
-          festivalCover={true}
+          festivalCover
           visible={toggleCalender}
           calendarType={2}
           fullScreen={false}
-          isBareShell={true}
+          isBareShell
           toRoof={"3rem"}
-          title="请选择日期test"
+          title='请选择日期test'
           dayConfig={this.dayConfig}
           onSelect={this.selectedHandler}
           onConfirm={this.confirmHandler}

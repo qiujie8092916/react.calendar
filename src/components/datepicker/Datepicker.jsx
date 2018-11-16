@@ -1,6 +1,5 @@
 import React from "react";
 import moment from "moment";
-import ReactDOM from "react-dom";
 import { isEmpty } from "lodash";
 import { Context } from "./context";
 import BScroll from "better-scroll";
@@ -13,24 +12,24 @@ import RenderTips from "./RenderTips.jsx";
 import WeeksBanner from "./WeeksBanner.jsx";
 
 const LANG = {
-  YEAR_POSTFIX: "年",
   MONTH_POSTFIX: "月",
-  WEEKS: ["日", "一", "二", "三", "四", "五", "六"]
+  WEEKS: ["日", "一", "二", "三", "四", "五", "六"],
+  YEAR_POSTFIX: "年"
 };
 
 class Datepicker extends React.Component {
   state = {
-    slideIndex: 0,
-    isLoading: true
+    isLoading: true,
+    slideIndex: 0
   };
 
   els = {
-    weeksRef: React.createRef(),
-    viewScroll: React.createRef(),
-    scrollMonthBanner: React.createRef(),
-    monthRef: new Array(this.props.months.length),
     eachMonth: new Array(this.props.months.length),
-    scrollWrapper: null
+    monthRef: new Array(this.props.months.length),
+    scrollMonthBanner: React.createRef(),
+    scrollWrapper: null,
+    viewScroll: React.createRef(),
+    weeksRef: React.createRef()
   };
 
   titleHeight = 0.82;
@@ -38,8 +37,9 @@ class Datepicker extends React.Component {
   weekHeight = 0.6;
 
   componentDidMount() {
-    this.props.conf.calendarType === 2 &&
+    if (this.props.conf.calendarType === 2) {
       setTimeout(this.initScrollMonthBanner, 0);
+    }
     this.setPosition();
   }
 
@@ -79,29 +79,29 @@ class Datepicker extends React.Component {
       scrollMonthBanner.current.children &&
       scrollMonthBanner.current.children.length
         ? parseFloat(
-            getComputedStyle(scrollMonthBanner.current.children[0], null).width
-          ) * scrollMonthBanner.current.children.length
+          window.getComputedStyle(scrollMonthBanner.current.children[0], null)
+            .width
+        ) * scrollMonthBanner.current.children.length
         : 0
     }px`;
     this.bScroll = new BScroll(viewScroll.current, {
-      scrollX: true,
-      scrollY: false,
+      bounceTime: 500,
       click: true,
-      bounceTime: 500
+      scrollX: true,
+      scrollY: false
     });
   };
 
   correctionScrollMonthBanner = idx => {
-    const clientWidth = document.documentElement.clientWidth,
-      curItem = this.els.eachMonth[idx].getBoundingClientRect(),
-      correctionOffset = clientWidth / 2 - curItem.width / 2;
+    const clientWidth = document.documentElement.clientWidth;
+    const curItem = this.els.eachMonth[idx].getBoundingClientRect();
+    const correctionOffset = clientWidth / 2 - curItem.width / 2;
     this.bScroll.scrollBy(correctionOffset - curItem.left);
   };
 
   getItemMonth = () => {
     let {
       conf,
-      days,
       months,
       minDate,
       maxDate,
@@ -151,7 +151,7 @@ class Datepicker extends React.Component {
   }
 
   render() {
-    const { tip, conf, title, months, toRoof, visible } = this.props;
+    const { tip, conf, title, months, toRoof } = this.props;
     const { fullScreen, calendarType, isBareShell } = conf;
     const hasTip = !isEmpty(tip);
     return (
@@ -217,14 +217,14 @@ class Datepicker extends React.Component {
             style={
               calendarType === 1
                 ? {
-                    height: `calc(${
-                      document.documentElement.clientHeight
-                    }px - ${!fullScreen ? toRoof : "0px"} - ${(hasTip
-                      ? this.tipHeight
-                      : 0) +
+                  height: `calc(${
+                    document.documentElement.clientHeight
+                  }px - ${!fullScreen ? toRoof : "0px"} - ${(hasTip
+                    ? this.tipHeight
+                    : 0) +
                       this.weekHeight +
                       this.titleHeight}rem)`
-                  }
+                }
                 : {}
               /* ) */
             }
@@ -240,12 +240,13 @@ class Datepicker extends React.Component {
                     this.setState({ slideIndex: idx });
                     this.correctionScrollMonthBanner(idx);
                   }
-                  this.state.isLoading &&
+                  if (this.state.isLoading) {
                     setTimeout(() => {
                       this.setState({
                         isLoading: !this.props.visible
                       });
                     }, 0);
+                  }
                 }}
               >
                 {this.getItemMonth().props.children}

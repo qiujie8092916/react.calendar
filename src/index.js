@@ -1,5 +1,5 @@
 import React from "react";
-import ReactDOM, { render } from "react-dom";
+import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./pages/App.js";
 import Rem from "./common/js/rem";
@@ -15,7 +15,7 @@ if (isInWechat()) {
 }
 
 ReactDOM.render(
-  <Rem vw="10">
+  <Rem vw='10'>
     <App />
   </Rem>,
   document.getElementById("root")

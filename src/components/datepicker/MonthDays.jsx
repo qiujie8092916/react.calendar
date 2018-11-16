@@ -22,22 +22,22 @@ class MonthDays extends React.PureComponent {
   render() {
     // console.time("render MonthOfDays -> did update MonthOfDays");
     const {
-        id,
-        conf,
-        holiday,
-        dayConfig,
-        isDisabled,
-        selectedType
-      } = this.props,
-      { SELECTEDTYPE } = this,
-      defaultStyle = `${isDisabled ? " disabled" : ""}`,
-      restStyle = `${
-        holiday && !isUndefined(holiday.isDayOfRest)
-          ? holiday.isDayOfRest
-            ? " day-of-rest"
-            : " day-of-work"
-          : ""
-      }`;
+      id,
+      conf,
+      holiday,
+      dayConfig,
+      isDisabled,
+      selectedType
+    } = this.props;
+    const { SELECTEDTYPE } = this;
+    const defaultStyle = `${isDisabled ? " disabled" : ""}`;
+    const restStyle = `${
+      holiday && !isUndefined(holiday.isDayOfRest)
+        ? holiday.isDayOfRest
+          ? " day-of-rest"
+          : " day-of-work"
+        : ""
+    }`;
     let cssStyle = `dayOfMonth${defaultStyle}${restStyle}`;
 
     switch (selectedType) {
@@ -65,13 +65,17 @@ class MonthDays extends React.PureComponent {
               <div
                 className={cssStyle}
                 onClick={() => {
-                  if (this.props.isDisabled) return;
-                  onSelect && onSelect(this.props.id);
+                  if (this.props.isDisabled) {
+                    return;
+                  }
+                  if (onSelect) {
+                    onSelect(this.props.id);
+                  }
                 }}
               >
                 <EachDate
-                  conf={conf}
                   id={id}
+                  conf={conf}
                   holiday={holiday}
                   dayConfig={dayConfig}
                 />
@@ -119,22 +123,24 @@ class EachDate extends React.PureComponent {
     return holiday &&
       conf.festivalCover &&
       moment(id).format("MMDD") === holiday.HolidayDay ? null : (
-      <div
-        className={`calendarDay flex`}
-        style={conf.dayStyle}
-        flex={`4 row h-center ${conf.needTitle ? "v-bottom" : "v-center"}`}
-        style={{
-          color:
-            moment(id).days() === 0 || moment(id).days() === 6
-              ? "#ff5722"
-              : "#333"
-        }}
-      >
-        {this.toDay.isSame(id, "day") && conf.showToday
-          ? "今天"
-          : moment(id).format("D")}
-      </div>
-    );
+        <div
+          className="calendarDay flex"
+          flex={`4 row h-center ${conf.needTitle ? "v-bottom" : "v-center"}`}
+          style={Object.assign(
+            {
+              color:
+              moment(id).days() === 0 || moment(id).days() === 6
+                ? "#ff5722"
+                : "#333"
+            },
+            conf.dayStyle
+          )}
+        >
+          {this.toDay.isSame(id, "day") && conf.showToday
+            ? "今天"
+            : moment(id).format("D")}
+        </div>
+      );
   };
 
   calendarDesc = () => {

@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React from "react";
 import moment from "moment";
 import axios from "axios";
 import { isEmpty } from "lodash";
@@ -15,23 +15,23 @@ const CACHE = "REACT_CALENDAR_DATA_CACHE";
 
 function defaultProps(cClass) {
   cClass.defaultProps = {
-    tip: "",
-    dayStyle: {},
+    calendarType: 1,
     dayConfig: {},
-    selectType: 1,
+    dayStyle: {},
+    festivalCover: true,
+    fullScreen: false,
+    isBareShell: true,
     isGMT08: false,
     isInland: true,
-    toRoof: "2rem",
-    calendarType: 1,
-    showToday: true,
-    fullScreen: false,
-    selectedDates: [],
-    isBareShell: true,
-    showFestival: true,
-    title: "请选择日期",
+    selectType: 1,
     selectedDate: null,
-    festivalCover: true,
-    showHolidayInfo: true
+    selectedDates: [],
+    showFestival: true,
+    showHolidayInfo: true,
+    showToday: true,
+    tip: "",
+    title: "请选择日期",
+    toRoof: "2rem"
   };
 }
 
@@ -51,8 +51,8 @@ class Calendar extends React.Component {
     };
 
     this.opt = {
-      onSelect: this.onSelect,
-      onCancel: this.onCancel
+      onCancel: this.onCancel,
+      onSelect: this.onSelect
     };
     window.moment = moment;
   }
@@ -62,12 +62,13 @@ class Calendar extends React.Component {
   }
 
   componentDidMount() {
-    (this.props.showFestival || this.props.showHolidayInfo) &&
+    if (this.props.showFestival || this.props.showHolidayInfo) {
       this.getHolidayData().then(res => {
         this.setState({
           holidays: res
         });
       });
+    }
   }
 
   onCancel = () => {
@@ -75,14 +76,15 @@ class Calendar extends React.Component {
     const { selectedDate, selectedDates } = this.state;
     switch (selectType) {
       case 1:
-        !!onConfirm &&
+        if (onConfirm) {
           onConfirm({
             date: selectedDate,
             std: moment(selectedDate).format("YYYY-MM-DD")
           });
+        }
         break;
       case 2:
-        !!onConfirm &&
+        if (onConfirm) {
           onConfirm(
             {
               date: selectedDates[0],
@@ -93,9 +95,12 @@ class Calendar extends React.Component {
               std: moment(selectedDates[1]).format("YYYY-MM-DD")
             }
           );
+        }
         break;
     }
-    !!onCancel && onCancel();
+    if (onCancel) {
+      onCancel();
+    }
   };
 
   initData = () => {
@@ -118,42 +123,46 @@ class Calendar extends React.Component {
     } = this.props;
 
     this.conf = {
-      isGMT08: isGMT08,
-      dayStyle: dayStyle,
-      isInland: isInland,
-      showToday: showToday,
-      fullScreen: fullScreen,
-      selectType: selectType,
-      isBareShell: isBareShell,
       calendarType: calendarType,
-      showFestival: showFestival,
+      dayStyle: dayStyle,
       festivalCover: festivalCover,
       festivalStyle: festivalStyle,
+      fullScreen: fullScreen,
+      isBareShell: isBareShell,
+      isGMT08: isGMT08,
+      isInland: isInland,
+      needTitle: JSON.stringify(dayConfig) !== "{}",
+      selectType: selectType,
+      showFestival: showFestival,
       showHolidayInfo: showHolidayInfo,
-      needTitle: JSON.stringify(dayConfig) !== "{}"
+      showToday: showToday
     };
     this.months = this.enumerateBetweenDates(startDate, endDate, "month");
   };
 
   onSelect = tick => {
-    let newState = {},
-      { selectType, onSelect, onConfirm } = this.props,
-      oldDate =
-        selectType === 1 ? this.state.selectedDate : this.state.selectedDates,
-      newDate = {
-        date: new Date(tick),
-        std: moment(tick).format("YYYY-MM-DD")
-      };
+    let newState = {};
+    const { selectType, onSelect } = this.props;
+    const oldDate =
+      selectType === 1 ? this.state.selectedDate : this.state.selectedDates;
+    let newDate = {
+      date: new Date(tick),
+      std: moment(tick).format("YYYY-MM-DD")
+    };
 
     switch (selectType) {
       case 1:
         newState.selectedDate = new Date(tick);
-        onSelect && onSelect(newDate);
+        if (onSelect) {
+          onSelect(newDate);
+        }
         break;
       case 2:
         if (!oldDate[0] || oldDate[1]) {
           newState.selectedDates = [new Date(tick), null];
-          onSelect && onSelect(newDate);
+          if (onSelect) {
+            onSelect(newDate);
+          }
         } else {
           newState.selectedDates =
             +tick < +oldDate[0]
@@ -167,29 +176,34 @@ class Calendar extends React.Component {
   };
 
   enumerateBetweenDates = (startDate, endDate, type) => {
-    let format,
-      dates = [],
-      currDate = moment(startDate)
-        .clone()
-        .startOf(type),
-      lastDate = moment(endDate)
-        .clone()
-        .startOf(type);
-    if (type === "month") format = "YYYY-MM";
-    else format = "YYYYMMDD";
+    let format;
+    let dates = [];
+    let currDate = moment(startDate)
+      .clone()
+      .startOf(type);
+    let lastDate = moment(endDate)
+      .clone()
+      .startOf(type);
+    if (type === "month") {
+      format = "YYYY-MM";
+    } else {
+      format = "YYYYMMDD";
+    }
     while (currDate.diff(lastDate, type) <= 0) {
       let m = moment(currDate.clone().toDate()).format(format);
-      if (!dates.includes(m)) dates.push(m);
+      if (!dates.includes(m)) {
+        dates.push(m);
+      }
       currDate.add(1, type);
     }
     return dates;
   };
 
   getHolidayData = () => {
-    let holiday_cache = window.localStorage.getItem(CACHE);
+    let holidayCache = window.localStorage.getItem(CACHE);
     if (
-      !holiday_cache ||
-      JSON.parse(holiday_cache).queryYear != moment().year()
+      !holidayCache ||
+      JSON.parse(holidayCache).queryYear !== moment().year()
     ) {
       return new Promise((resolve, reject) => {
         axios
@@ -209,20 +223,19 @@ class Calendar extends React.Component {
               } catch (e) {
                 reject(e);
               }
-              let _holidays = {};
+              let originHolidays = {};
               holidays.map((it, idx) => {
-                _holidays[it.Year] = it.HolidayList;
+                originHolidays[it.Year] = it.HolidayList;
               });
 
               window.localStorage.setItem(
                 CACHE,
                 JSON.stringify({
-                  queryYear: moment().year(),
-                  data: _holidays
+                  data: originHolidays,
+                  queryYear: moment().year()
                 })
               );
-              XPathResult;
-              resolve(this.holidayConvert(_holidays));
+              resolve(this.holidayConvert(originHolidays));
             } else {
               reject(data.errMsg);
             }
@@ -230,7 +243,7 @@ class Calendar extends React.Component {
       });
     } else {
       return new Promise(resolve => {
-        resolve(this.holidayConvert(JSON.parse(holiday_cache).data));
+        resolve(this.holidayConvert(JSON.parse(holidayCache).data));
       });
     }
   };
@@ -240,14 +253,14 @@ class Calendar extends React.Component {
     Object.keys(obj).forEach(year => {
       h[year] = {};
       obj[year].forEach(holiday => {
-        let { HolidayCount } = holiday,
-          workDay = holiday.WorkDay.split(","),
-          noWorkDay = holiday.NoWorkDay.split(",");
+        let { HolidayCount } = holiday;
+        let workDay = holiday.WorkDay.split(",");
+        let noWorkDay = holiday.NoWorkDay.split(",");
 
         h[year][year + holiday.HolidayDay] = holiday;
 
         if (!Number.isNaN(Number(HolidayCount)) && HolidayCount > 0) {
-          //节中
+          // 节中
           for (let i = 0; i <= HolidayCount; i++) {
             if (
               !moment(year + holiday.StartDay.trim())
@@ -263,13 +276,13 @@ class Calendar extends React.Component {
           }
         }
         if (workDay.length && !isEmpty(workDay[0])) {
-          //节补班
+          // 节补班
           workDay.forEach((it, idx) => {
             h[year][year + workDay[idx]] = { ...holiday, isDayOfRest: false };
           });
         }
         if (noWorkDay.length && !isEmpty(noWorkDay[0])) {
-          //休工作日
+          // 休工作日
           noWorkDay.forEach((it, idx) => {
             h[year][year + noWorkDay[idx]] = { ...holiday, isDayOfRest: true };
           });
@@ -325,10 +338,10 @@ class Calendar extends React.Component {
       <React.Fragment>
         {isBareShell ? (
           <React.Fragment>
-            <Animate showProp="visible" transitionName="slideV">
+            <Animate showProp='visible' transitionName='slideV'>
               {this.getDatepicker()}
             </Animate>
-            <Animate showProp="visible" transitionName="fade">
+            <Animate showProp='visible' transitionName='fade'>
               <DatepickerMask visible={visible} onCancel={this.onCancel} />
             </Animate>
           </React.Fragment>

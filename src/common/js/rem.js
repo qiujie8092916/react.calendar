@@ -1,7 +1,7 @@
-import React, { Component } from "react";
+import React from "react";
 import PropTypes from "prop-types";
 
-export default class Rem extends Component {
+export default class Rem extends React.Component {
   state = {
     docElement: null,
     originFontSize: ""
@@ -43,7 +43,7 @@ export default class Rem extends Component {
   setDocFontSize = () => {
     const vwNumber = parseInt(this.props.vw);
     const winWidth = parseFloat(
-      getComputedStyle(this.state.docElement, null).width
+      window.getComputedStyle(this.state.docElement, null).width
     );
     this.setWithVal(`${winWidth / (100 / vwNumber)}px`);
   };
