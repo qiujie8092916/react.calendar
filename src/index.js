@@ -15,7 +15,7 @@ if (isInWechat()) {
 }
 
 ReactDOM.render(
-  <Rem vw="10" pixel>
+  <Rem vw="10">
     <App />
   </Rem>,
   document.getElementById("root")

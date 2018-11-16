@@ -4,26 +4,12 @@ import PropTypes from "prop-types";
 export default class Rem extends Component {
   state = {
     docElement: null,
-    originFontSize: "",
-    usePixel: false
-  };
-  static defaultProps = {
-    pixel: false
+    originFontSize: ""
   };
   static propTypes = {
-    vw: PropTypes.string.isRequired,
-    pixel: PropTypes.bool
+    vw: PropTypes.string.isRequired
   };
   componentDidMount() {
-    /**
-     * 判断浏览器是否支持vw
-     */
-    const isSupportVW = (() => {
-      const element = document.createElement("div");
-      const val = "1vw";
-      element.style["width"] = val;
-      return element.style["width"] === val;
-    })();
     /**
      * documentElement
      */
@@ -31,13 +17,10 @@ export default class Rem extends Component {
     this.setState(
       {
         docElement,
-        originFontSize: docElement.style["font-size"],
-        usePixel: !isSupportVW || this.props.pixel
+        originFontSize: docElement.style["font-size"]
       },
       () => {
-        if (this.state.usePixel) {
-          window.addEventListener("resize", this.setDocFontSize);
-        }
+        window.addEventListener("resize", this.setDocFontSize);
         this.setDocFontSize();
       }
     );
@@ -59,14 +42,10 @@ export default class Rem extends Component {
    */
   setDocFontSize = () => {
     const vwNumber = parseInt(this.props.vw);
-    if (this.state.usePixel) {
-      const winWidth = parseFloat(
-        getComputedStyle(this.state.docElement, null).width
-      );
-      this.setWithVal(`${winWidth / (100 / vwNumber)}px`);
-    } else {
-      this.setWithVal(`${vwNumber}vw`);
-    }
+    const winWidth = parseFloat(
+      getComputedStyle(this.state.docElement, null).width
+    );
+    this.setWithVal(`${winWidth / (100 / vwNumber)}px`);
   };
   render() {
     return this.props.children;

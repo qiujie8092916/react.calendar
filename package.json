@@ -1,5 +1,5 @@
 {
-  "name": "react-calendar",
+  "name": "reactm-calendar",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -124,5 +124,24 @@
     "presets": [
       "react-app"
     ]
-  }
+  },
+  "description": "``` import { Calendar } from 'react-calendar' ```",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/qiujie8092916/react.calendar.git"
+  },
+  "keywords": [
+    "react",
+    "react-component",
+    "react-mobile",
+    "react-mobile-calendar",
+    "datepicker"
+  ],
+  "author": "Empty",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/qiujie8092916/react.calendar/issues"
+  },
+  "homepage": "https://github.com/qiujie8092916/react.calendar#readme"
 }
