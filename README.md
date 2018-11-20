@@ -1,6 +1,6 @@
-##**日历组件 📅**
+**<h2>日历组件 📅</h2>**
 
-####Demo
+<h3>Demo:</h3>
 
 ```
 $ git clone git@github.com:qiujie8092916/react.calendar.git
@@ -9,14 +9,14 @@ $ yarn start
 ```
 
 
-####Import
+<h3>Import:</h3>
 
 ```
 import { Calendar } from 'react-calendar'
 ```
 
 
-####CalendarProps:
+<h3>CalendarProps:</h3>
 
 ```
 CalendarPropTypes {
@@ -45,7 +45,7 @@ CalendarPropTypes {
 ```
 
 
-####DayConfig:
+<h3>DayConfig:</h3>
 
 ```
 interface DayConfig {
@@ -56,7 +56,7 @@ interface DayConfig {
 ```
 
 
-####Example:
+<h3>Example:</h3>
 
 ```
 <Calendar
@@ -107,7 +107,7 @@ interface DayConfig {
 ```
 
 
-####API
+<h3>API:</h3>
 
 <table>
   <thead>
