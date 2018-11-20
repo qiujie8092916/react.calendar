@@ -50,18 +50,19 @@ export default class UseCalendar extends React.Component {
     console.log(date.std);
   };
 
-  confirmHandler = data => {
-    // Array.isArray(data)
-    //   ? console.log(`confirm: ${data[0].std}, ${data[1].std}`)
-    //   : console.log(data.std);
-    if (Array.isArray(data)) {
+  confirmHandler = (...selected) => {
+    console.log(
+      `confirm: ${selected[0].std}${selected[1] ? ` - ${selected[1].std}` : ""}`
+    );
+
+    if (selected[1]) {
       this.setState({
-        maxDate: data[1].date,
-        minDate: data[0].date
+        maxDate: selected[1].date,
+        minDate: selected[0].date
       });
     } else {
       this.setState({
-        singleDate: data.date
+        singleDate: selected[0].date
       });
     }
   };
@@ -81,7 +82,7 @@ export default class UseCalendar extends React.Component {
           tip={"价格变动频繁，以实际成交价为准"}
           startDate={new Date(2018, 5, 2)} /** 6月2日 */
           endDate={new Date(2019, 1, 10)} /** 12月10日 */
-          selectType={2}
+          selectType={1}
           selectedDate={
             this.selectedType === 1 ? [singleDate] : [minDate, maxDate]
           }
