@@ -4,12 +4,13 @@ import { isEmpty } from "lodash";
 import { Context } from "./context";
 import BScroll from "better-scroll";
 import Carousel from "nuka-carousel";
+import { Config, DayConfig, defaultSelectedMoment } from "./propTypes";
 
-import Month from "./Month.jsx";
-import Header from "./Header.jsx";
-import Loading from "./Loading.jsx";
-import RenderTips from "./RenderTips.jsx";
-import WeeksBanner from "./WeeksBanner.jsx";
+import Month from "./Month";
+import Header from "./Header";
+import Loading from "./Loading";
+import RenderTips from "./RenderTips";
+import WeeksBanner from "./WeeksBanner";
 
 const LANG = {
   MONTH_POSTFIX: "月",
@@ -17,19 +18,45 @@ const LANG = {
   YEAR_POSTFIX: "年"
 };
 
-class Datepicker extends React.Component {
+interface DatepickerType {
+  conf: Config;
+  visible: boolean;
+  months: string[];
+  minDate: moment.Moment;
+  maxDate: moment.Moment;
+  holidays: object;
+  dayConfig: DayConfig;
+  tip: string;
+  title: string;
+  toRoof: string;
+  selectedDate: defaultSelectedMoment;
+}
+
+interface DatepickerState {
+  isLoading: boolean;
+  slideIndex: number;
+}
+
+class Datepicker extends React.Component<DatepickerType, DatepickerState> {
+  bScroll: any;
+
   state = {
     isLoading: true,
     slideIndex: 0
   };
 
-  els = {
+  els: {
+    eachMonth: any[];
+    monthRef: any[];
+    scrollMonthBanner: HTMLDivElement | null;
+    scrollWrapper: HTMLDivElement | null;
+    viewScroll: HTMLDivElement | null;
+  } = {
     eachMonth: new Array(this.props.months.length),
     monthRef: new Array(this.props.months.length),
-    scrollMonthBanner: React.createRef(),
+    scrollMonthBanner: null,
     scrollWrapper: null,
-    viewScroll: React.createRef(),
-    weeksRef: React.createRef()
+    viewScroll: null
   };
 
   titleHeight = 0.82;
@@ -37,33 +64,28 @@ class Datepicker extends React.Component {
   weekHeight = 0.6;
 
   componentDidMount() {
-    if (this.props.conf.calendarType === 2) {
-      setTimeout(this.initScrollMonthBanner, 0);
-    }
-    this.setPosition();
+    setTimeout(() => {
+      if (this.props.conf.calendarType === 2) {
+        this.initScrollMonthBanner();
+      }
+      this.setPosition();
+    }, 0);
   }
 
   setPosition = () => {
-    let index = 0;
-    const { conf, selectedDate, selectedDates, months } = this.props;
-    switch (conf.selectType) {
-      case 1:
-        index = months.findIndex(it => it === selectedDate.format("YYYY-MM"));
-        break;
-      case 2:
-        index = months.findIndex(
-          it => it === selectedDates[0].format("YYYY-MM")
-        );
-        break;
-    }
+    const { conf, selectedDate, months } = this.props;
+    const index = months.findIndex(
+      it => it === selectedDate[0].format("YYYY-MM")
+    );
 
     switch (conf.calendarType) {
       case 1:
-        let monthPosition = this.els.monthRef[index].getPosition();
-        let selfPosition = this.els.scrollWrapper.getBoundingClientRect();
-        this.els.scrollWrapper.scrollTop =
-          (monthPosition && monthPosition.top ? monthPosition.top : 0) -
-          (selfPosition && selfPosition.top ? selfPosition.top : 0);
+        if (this.els.scrollWrapper) {
+          const monthPosition = this.els.monthRef[index].getPosition();
+          const selfPosition = this.els.scrollWrapper.getBoundingClientRect();
+          this.els.scrollWrapper.scrollTop =
+            monthPosition.top - selfPosition.top;
+        }
         break;
       case 2:
         this.setState({
@@ -74,17 +96,19 @@ class Datepicker extends React.Component {
   };
 
   initScrollMonthBanner = () => {
-    const { viewScroll, scrollMonthBanner } = this.els;
-    scrollMonthBanner.current.style.width = `${
-      scrollMonthBanner.current.children &&
-      scrollMonthBanner.current.children.length
-        ? parseFloat(
-          window.getComputedStyle(scrollMonthBanner.current.children[0], null)
-            .width
-        ) * scrollMonthBanner.current.children.length
+    const EScrollMonthBanner = this.els.scrollMonthBanner as HTMLDivElement;
+    const EviewScroll = this.els.viewScroll as HTMLDivElement;
+    const MonthBannerBlockWidth = getComputedStyle(
+      EScrollMonthBanner.children[0],
+      null
+    ).width;
+    EScrollMonthBanner.style.width = `${
+      EScrollMonthBanner.children && EScrollMonthBanner.children.length
+        ? parseFloat(MonthBannerBlockWidth as string) *
+          EScrollMonthBanner.children.length
         : 0
     }px`;
-    this.bScroll = new BScroll(viewScroll.current, {
+    this.bScroll = new BScroll(EviewScroll, {
       bounceTime: 500,
       click: true,
       scrollX: true,
@@ -92,23 +116,24 @@ class Datepicker extends React.Component {
     });
   };
 
-  correctionScrollMonthBanner = idx => {
-    const clientWidth = document.documentElement.clientWidth;
+  correctionScrollMonthBanner = (idx: number): void => {
+    const clientWidth = document.documentElement
+      ? document.documentElement.clientWidth
+      : 0;
     const curItem = this.els.eachMonth[idx].getBoundingClientRect();
     const correctionOffset = clientWidth / 2 - curItem.width / 2;
     this.bScroll.scrollBy(correctionOffset - curItem.left);
   };
 
   getItemMonth = () => {
-    let {
+    const {
       conf,
       months,
       minDate,
       maxDate,
       holidays,
       dayConfig,
-      selectedDate,
-      selectedDates
+      selectedDate
     } = this.props;
 
     return (
@@ -125,7 +150,6 @@ class Datepicker extends React.Component {
               maxDate={maxDate}
               dayConfig={dayConfig}
               selectedDate={selectedDate}
-              selectedDates={selectedDates}
               holidays={
                 holidays[moment(it).year()] ? holidays[moment(it).year()] : {}
               }
@@ -135,20 +159,6 @@ class Datepicker extends React.Component {
       </React.Fragment>
     );
   };
-
-  componentWillUpdate() {
-    // console.log("\n- - - - - - - - - ");
-    // console.time(
-    //   "- - - - - - - - - will update Datepicker -> did update Datepicker"
-    // );
-  }
-
-  componentDidUpdate() {
-    // console.timeEnd("did update Month -> did update Datepicker");
-    // console.timeEnd(
-    //   "- - - - - - - - - will update Datepicker -> did update Datepicker"
-    // );
-  }
 
   render() {
     const { tip, conf, title, months, toRoof } = this.props;
@@ -179,10 +189,10 @@ class Datepicker extends React.Component {
           }`}
         >
           {calendarType === 2 && (
-            <div className="view-scroll" ref={this.els.viewScroll}>
+            <div className="view-scroll" ref={el => (this.els.viewScroll = el)}>
               <div
                 className="scroll-monthBanner"
-                ref={this.els.scrollMonthBanner}
+                ref={el => (this.els.scrollMonthBanner = el)}
               >
                 {months.map((it, idx) => (
                   <div
@@ -207,7 +217,6 @@ class Datepicker extends React.Component {
           )}
           <WeeksBanner
             weeks={LANG.WEEKS}
-            ref={this.els.weeksRef}
             weekHeight={this.weekHeight}
             hasTip={hasTip}
           />
@@ -217,14 +226,16 @@ class Datepicker extends React.Component {
             style={
               calendarType === 1
                 ? {
-                  height: `calc(${
-                    document.documentElement.clientHeight
-                  }px - ${!fullScreen ? toRoof : "0px"} - ${(hasTip
-                    ? this.tipHeight
-                    : 0) +
+                    height: `calc(${
+                      document.documentElement
+                        ? document.documentElement.clientHeight
+                        : 0
+                    }px - ${!fullScreen ? toRoof : "0px"} - ${(hasTip
+                      ? this.tipHeight
+                      : 0) +
                       this.weekHeight +
                       this.titleHeight}rem)`
-                }
+                  }
                 : {}
               /* ) */
             }
@@ -232,10 +243,10 @@ class Datepicker extends React.Component {
             {calendarType === 2 ? (
               <Carousel
                 className="carousel"
-                withoutControls
+                withoutControls={true}
                 heightMode="current"
                 slideIndex={this.state.slideIndex}
-                afterSlide={idx => {
+                afterSlide={(idx: number) => {
                   if (idx !== this.state.slideIndex) {
                     this.setState({ slideIndex: idx });
                     this.correctionScrollMonthBanner(idx);

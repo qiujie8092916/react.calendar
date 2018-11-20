@@ -1,49 +1,45 @@
 import React from "react";
 import moment from "moment";
-import { isNull } from "lodash";
-import { SelectedType } from "./selectedType";
+import { Config, DayConfig, defaultSelectedMoment } from "./propTypes";
+import { SELECTEDTYPE } from "./selectedType";
 
-import MonthDays from "./MonthDays.jsx";
+import MonthDays from "./MonthDays";
 
-function EnumStyleComputed(cClass) {
-  cClass.prototype.SELECTEDTYPE = SelectedType;
+interface MonthType {
+  month: string;
+  conf: Config;
+  minDate: moment.Moment;
+  maxDate: moment.Moment;
+  dayConfig: DayConfig;
+  selectedDate: defaultSelectedMoment;
+  holidays: object;
 }
 
-@EnumStyleComputed
-class Month extends React.Component {
-  els = {
-    _self: React.createRef()
+class Month extends React.Component<MonthType, any> {
+  els: {
+    monthRef: HTMLDivElement | null;
+  } = {
+    monthRef: null
   };
 
-  shouldComponentUpdate(nextProps, nextState) {
-    // console.timeEnd("prepare map month -> should update Month");
-    // console.timeEnd("did update Datepicker -> should update Month");
+  shouldComponentUpdate(nextProps: Readonly<MonthType>) {
     let shouldUpdate = false;
-    const curSelected =
-      this.props.conf.selectType === 1
-        ? this.props.selectedDate.clone()
-        : [
-          this.props.selectedDates[0].clone(),
-          this.props.selectedDates[1]
-            ? this.props.selectedDates[1].clone()
-            : null
+    const curSelected = !this.props.selectedDate[1]
+      ? [this.props.selectedDate[0].clone()]
+      : [
+          this.props.selectedDate[0].clone(),
+          this.props.selectedDate[1].clone()
         ];
-    const nextSelected =
-      this.props.conf.selectType === 1
-        ? nextProps.selectedDate.clone()
-        : [
-          nextProps.selectedDates[0].clone(),
-          nextProps.selectedDates[1]
-            ? nextProps.selectedDates[1].clone()
-            : null
-        ];
+    const nextSelected = !nextProps.selectedDate[1]
+      ? [nextProps.selectedDate[0].clone()]
+      : [nextProps.selectedDate[0].clone(), nextProps.selectedDate[1].clone()];
 
     switch (this.props.conf.selectType) {
       case 1:
         if (
-          !curSelected.isSame(nextSelected) &&
-          curSelected.format("YYYY-MM") === this.props.month &&
-          nextSelected.format("YYYY-MM") === this.props.month
+          !curSelected[0].isSame(nextSelected[0]) &&
+          curSelected[0].format("YYYY-MM") === this.props.month &&
+          nextSelected[0].format("YYYY-MM") === this.props.month
         ) {
           shouldUpdate = true;
         }
@@ -56,17 +52,17 @@ class Month extends React.Component {
               : !(!curSelected[1] && !nextSelected[1]))) &&
           ((curSelected[1]
             ? moment(this.props.month).isBetween(
-              curSelected[0].subtract(1, "M"),
-              curSelected[1].add(1, "M"),
-              "month"
-            )
+                curSelected[0].subtract(1, "M"),
+                curSelected[1].add(1, "M"),
+                "month"
+              )
             : moment(this.props.month).isSame(curSelected[0], "month")) ||
             (nextSelected[1]
               ? moment(this.props.month).isBetween(
-                nextSelected[0].subtract(1, "M"),
-                nextSelected[1].add(1, "M"),
-                "month"
-              )
+                  nextSelected[0].subtract(1, "M"),
+                  nextSelected[1].add(1, "M"),
+                  "month"
+                )
               : moment(this.props.month).isSame(nextSelected[0], "month")))
         ) {
           shouldUpdate = true;
@@ -82,44 +78,46 @@ class Month extends React.Component {
     return shouldUpdate;
   }
 
-  getPosition = () => this.els._self.getBoundingClientRect();
+  getPosition = () => {
+    const EMonthRef = this.els.monthRef as HTMLDivElement;
+    return EMonthRef.getBoundingClientRect();
+  };
 
-  leftPad = val => (val.length === 1 ? `0${val}` : val);
+  leftPad = (val: string) => (val.length === 1 ? `0${val}` : val);
 
-  genCurStyle = timestamp => {
-    const { conf } = this.props;
-    const { SELECTEDTYPE } = this;
+  genCurStyle = (timestamp: number): number => {
+    const { conf, selectedDate } = this.props;
     const ts = moment(timestamp);
-    const oldSelectDate =
-      conf.selectType === 1
-        ? this.props.selectedDate
-        : this.props.selectedDates;
     let curStyle = SELECTEDTYPE.None;
 
     if (conf.selectType === 1) {
-      if (ts.isSame(oldSelectDate)) {
+      if (ts.isSame(selectedDate[0])) {
         curStyle = SELECTEDTYPE.Single;
       }
     } else {
       if (
-        (ts.isSame(oldSelectDate[0]) && isNull(oldSelectDate[1])) ||
-        (ts.isSame(oldSelectDate[0]) && ts.isSame(oldSelectDate[1]))
+        (!selectedDate[1] && ts.isSame(selectedDate[0])) ||
+        (selectedDate[1] &&
+          ts.isSame(selectedDate[0]) &&
+          ts.isSame(selectedDate[1]))
       ) {
         curStyle = SELECTEDTYPE.Single;
-      } else if (ts.isSame(oldSelectDate[0])) {
+      } else if (ts.isSame(selectedDate[0])) {
         curStyle = SELECTEDTYPE.Start;
-      } else if (ts.isSame(oldSelectDate[1])) {
+      } else if (selectedDate[1] && ts.isSame(selectedDate[1])) {
         curStyle = SELECTEDTYPE.End;
-      } else if (ts.isBetween(oldSelectDate[0], oldSelectDate[1])) {
+      } else if (
+        selectedDate[1] &&
+        ts.isBetween(selectedDate[0], selectedDate[1])
+      ) {
         curStyle = SELECTEDTYPE.Middle;
       }
     }
     return curStyle;
   };
 
-  getMonthDay = (timestamp, isEmpty = false) => {
+  getMonthDay = (timestamp: number, isEmpty = false) => {
     if (!isEmpty) {
-      // console.time("render Month -> will update MonthOfDays");
       const dayfrmat = moment(timestamp).format("YYYYMMDD");
       const { conf, minDate, maxDate, dayConfig, holidays } = this.props;
       const minDateClone = minDate.clone();
@@ -141,18 +139,9 @@ class Month extends React.Component {
         />
       );
     } else {
-      return <MonthDays key={timestamp} isDisabled />;
+      return <MonthDays key={timestamp} isDisabled={true} />;
     }
   };
-
-  componentWillUpdate(nextProps) {
-    // console.timeEnd("render Datepicker -> will update Month");
-  }
-
-  componentDidUpdate(prevProps) {
-    // console.timeEnd("did update MonthOfDays -> did update Month");
-    // console.time("did update Month -> did update Datepicker");
-  }
 
   render() {
     const { conf, month } = this.props;
@@ -161,23 +150,23 @@ class Month extends React.Component {
     const everyDayOfMonth = [...Array(dayOfMonth + 1).keys()];
 
     return (
-      <div className='months' ref={el => (this.els._self = el)}>
+      <div className="months" ref={el => (this.els.monthRef = el)}>
         {conf.calendarType === 1 && (
           <div
-            className='month-banner flex stc'
+            className="month-banner flex stc"
             style={{
               top: 0
             }}
-            flex='center'
+            flex="center"
           >
             {curMonth.format("YYYY年MM月")}
           </div>
         )}
-        <div className='month-cont flex' flex=''>
+        <div className="month-cont flex" flex="">
           {everyDayOfMonth.slice(1).map((it, idx) => {
-            let curDay = moment(`${month}-${this.leftPad(String(it))}`); // 当前月当前天
-            let dayOfWeek = curDay.day();
-            let timestamp = curDay.valueOf();
+            const curDay = moment(`${month}-${this.leftPad(String(it))}`); // 当前月当前天
+            const dayOfWeek = curDay.day();
+            const timestamp = curDay.valueOf();
             if (idx === 0 && dayOfWeek !== 0) {
               const emptyDay = [...Array(dayOfWeek).keys()].map((item, index) =>
                 this.getMonthDay(index, true)

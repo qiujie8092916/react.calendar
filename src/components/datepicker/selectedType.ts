@@ -1,4 +1,4 @@
-export const SelectedType = {
+export const SELECTEDTYPE = {
   // 选中一个（选中终点）(区间)
   End: 4,
   // 选中一个（选中中间）(区间)

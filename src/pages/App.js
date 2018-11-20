@@ -1,14 +1,12 @@
-import React, { Component } from "react";
+import React from "react";
 import UseCalendar from "./useCalendar";
 
-class App extends Component {
+export default class App extends React.Component {
   render() {
     return (
-      <div>
+      <React.Fragment>
         <UseCalendar />
-      </div>
+      </React.Fragment>
     );
   }
 }
-
-export default App;

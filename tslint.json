@@ -8,6 +8,14 @@
     ]
   },
   "rules": {
-    "ordered-imports": false
+    "ordered-imports": false,
+    "interface-name": [true, "never-prefix"],
+    "member-access": false,
+    "no-debugger": false,
+    "no-empty": false,
+    "jsx-no-lambda": false,
+    "no-namespace": false,
+    "jsx-boolean-value": false,
+    "no-console": false
   }
 }

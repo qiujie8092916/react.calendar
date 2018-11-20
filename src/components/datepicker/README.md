@@ -16,7 +16,6 @@
 - festivalStyle[Object] 节假日样式
 - onSelect[Func] 选择后的回调
 - onConfirm[Func] 确定后的回调
-  <!-- - needTitle[Bool] 是否需要标题， 默认 true -->
 - dayConfig[Object]　日期配置
 - title[String]　一级标题的文本
 - titleStyle[Object] 标题样式

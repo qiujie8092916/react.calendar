@@ -1,9 +1,15 @@
 import React from "react";
 import { isEmpty } from "lodash";
+import { CalendarType } from "./propTypes";
 
-class RenderTips extends React.PureComponent {
+interface RenderTipsType {
+  tip: CalendarType["tip"];
+  tipHeight: number;
+}
+
+class RenderTips extends React.PureComponent<RenderTipsType, any> {
   render() {
-    let { tip, tipHeight } = this.props;
+    const { tip, tipHeight } = this.props;
     return !isEmpty(tip) ? (
       <div className="datepicker-tips">
         <p style={{ height: `${tipHeight}rem` }}>{tip}</p>

@@ -9,11 +9,13 @@ import Calendar from "../../components/datepicker/Calendar";
 
 export default class UseCalendar extends React.Component {
   state = {
-    toggleCalender: false,
-    minDate: new Date(2018, 8, 21),
     maxDate: new Date(2018, 9, 2),
-    singleDate: new Date(2018, 9, 15)
+    minDate: new Date(2018, 8, 21),
+    singleDate: new Date(2018, 9, 15),
+    toggleCalender: false
   };
+
+  selectedType = 2;
 
   dayConfig = {
     20180601: {
@@ -26,8 +28,8 @@ export default class UseCalendar extends React.Component {
       title: "¥888"
     },
     20180605: {
-      title: "¥998",
-      disable: true
+      disable: true,
+      title: "¥998"
     },
     20180618: {
       title: "¥123"
@@ -45,7 +47,7 @@ export default class UseCalendar extends React.Component {
   }
 
   selectedHandler = date => {
-    // console.log(date.std);
+    console.log(date.std);
   };
 
   confirmHandler = data => {
@@ -54,8 +56,8 @@ export default class UseCalendar extends React.Component {
     //   : console.log(data.std);
     if (Array.isArray(data)) {
       this.setState({
-        minDate: data[0].date,
-        maxDate: data[1].date
+        maxDate: data[1].date,
+        minDate: data[0].date
       });
     } else {
       this.setState({
@@ -80,15 +82,16 @@ export default class UseCalendar extends React.Component {
           startDate={new Date(2018, 5, 2)} /** 6月2日 */
           endDate={new Date(2019, 1, 10)} /** 12月10日 */
           selectType={2}
-          selectedDate={singleDate}
-          selectedDates={[minDate, maxDate]}
+          selectedDate={
+            this.selectedType === 1 ? [singleDate] : [minDate, maxDate]
+          }
           festivalCover
           visible={toggleCalender}
           calendarType={2}
           fullScreen={false}
           isBareShell
           toRoof={"3rem"}
-          title='请选择日期test'
+          title="请选择日期test"
           dayConfig={this.dayConfig}
           onSelect={this.selectedHandler}
           onConfirm={this.confirmHandler}

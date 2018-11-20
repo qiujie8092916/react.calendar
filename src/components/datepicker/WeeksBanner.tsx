@@ -1,8 +1,14 @@
 import React from "react";
 
-class WeeksBanner extends React.PureComponent {
+interface WeeksBannerType {
+  hasTip: boolean;
+  weeks: string[];
+  weekHeight: number;
+}
+
+class WeeksBanner extends React.PureComponent<WeeksBannerType, any> {
   render() {
-    let { weekHeight, weeks } = this.props;
+    const { weekHeight, weeks } = this.props;
     return (
       <div
         className="weeks flex"
