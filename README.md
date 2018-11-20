@@ -244,7 +244,7 @@ interface DayConfig {
       <td>日期配置</td>
       <td align="center">Object</td>
       <td align="center">F</td>
-      <td align="center">(见DayConfig)</td>
+      <td align="center">(见[DayConfig](https://github.com/qiujie8092916/react.calendar#dayconfig))</td>
     </tr>
     <tr>
       <td align="center">onSelect</td>
