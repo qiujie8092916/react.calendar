@@ -57,8 +57,26 @@ export interface Config {
   showToday: boolean;
 }
 
-export interface HolidayFormat {
-  isDayOfRest: boolean;
-  HolidayName: string;
-  HolidayDay: string | null;
+export interface ConfigExtend extends Config {
+  needTitle: boolean;
 }
+
+export interface HolidayOrigin {
+  WorkDay: string;
+  NoWorkDay: string;
+  StartDay: string;
+  HolidayName: string;
+  EndDay: string;
+  HolidayDay: string;
+  HolidayCount: string | number;
+}
+
+export interface HolidayFormat extends HolidayOrigin {
+  isDayOfRest?: boolean;
+}
+
+// export const ValidateProps = (
+//   validateFunc: (p: string) => Error | undefined
+// ) => {
+//   validateFunc(p);
+// };

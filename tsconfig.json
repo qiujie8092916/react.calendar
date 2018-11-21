@@ -21,7 +21,7 @@
     "experimentalDecorators": true,
     "downlevelIteration": true
   },
-  "include": ["*.d.ts"],
+  "include": ["typings/*.d.ts", "src/**/*"],
   "exclude": [
     "node_modules",
     "build",
@@ -29,7 +29,6 @@
     "acceptance-tests",
     "webpack",
     "jest",
-    "src/setupTests.ts",
-    "src"
+    "src/setupTests.ts"
   ]
 }

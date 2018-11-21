@@ -16,6 +16,10 @@
     "jsx-no-lambda": false,
     "no-namespace": false,
     "jsx-boolean-value": false,
-    "no-console": false
+    "no-console": false,
+    "no-shadowed-variable": false
+  },
+  "jsRules": {
+    "no-console": false //Disable for javascript
   }
 }

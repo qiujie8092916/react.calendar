@@ -12,9 +12,9 @@ export default class Loading extends React.Component<LoadingType, any> {
         style={{ display: this.props.isShow ? "block" : "none" }}
       >
         <div className="datepicker-load-container">
-          <i />
-          <i />
-          <i />
+          <i className="dot" />
+          <i className="dot" />
+          <i className="dot" />
         </div>
       </div>
     );

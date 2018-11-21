@@ -4,18 +4,32 @@ import moment from "moment";
 import { isEmpty } from "lodash";
 import Animate from "rc-animate";
 import { Context } from "./context";
-import { CalendarType, Config, defaultSelectedDate } from "./propTypes";
+import {
+  CalendarType,
+  Config,
+  HolidayOrigin,
+  defaultSelectedDate
+} from "./propTypes";
 
-import "./Calendar.css";
+import "./Calendar.scss";
 
 import "./extensions";
+import AnimateFrame from "./AnimateFrame";
 import Datepicker from "./Datepicker";
 import DatepickerMask from "./DatepickerMask";
 
 const CACHE = "REACT_CALENDAR_DATA_CACHE";
 
+interface HolidayDrill {
+  [propName: string]: HolidayOrigin;
+}
+
+interface HolidayStruct {
+  [propName: string]: HolidayDrill;
+}
+
 interface CalendarState {
-  holidays: object;
+  holidays: HolidayStruct | object;
   selectedDate: defaultSelectedDate;
 }
 
@@ -42,6 +56,7 @@ class Calendar extends React.Component<CalendarType, CalendarState> {
   private months: string[];
   private opt: { onCancel: () => void; onSelect: (tick: number) => void };
   private conf: Config;
+
   constructor(props: CalendarType) {
     super(props);
     this.state = {
@@ -56,7 +71,7 @@ class Calendar extends React.Component<CalendarType, CalendarState> {
 
   componentDidMount() {
     if (this.props.showFestival || this.props.showHolidayInfo) {
-      this.getHolidayData().then(res => {
+      this.getHolidayData().then((res: HolidayOrigin) => {
         this.setState({
           holidays: res
         });
@@ -260,54 +275,45 @@ class Calendar extends React.Component<CalendarType, CalendarState> {
     const h = {};
     Object.keys(obj).forEach(year => {
       h[year] = {};
-      obj[year].forEach(
-        (holiday: {
-          WorkDay: string;
-          NoWorkDay: string;
-          StartDay: string;
-          EndDay: string;
-          HolidayDay: string;
-          HolidayCount: string | number;
-        }) => {
-          const { HolidayCount } = holiday;
-          const workDay = holiday.WorkDay.split(",");
-          const noWorkDay = holiday.NoWorkDay.split(",");
+      obj[year].forEach((holiday: HolidayOrigin) => {
+        const { HolidayCount } = holiday;
+        const workDay = holiday.WorkDay.split(",");
+        const noWorkDay = holiday.NoWorkDay.split(",");
 
-          h[year][year + holiday.HolidayDay] = holiday;
+        h[year][year + holiday.HolidayDay] = holiday;
 
-          if (!Number.isNaN(Number(HolidayCount)) && HolidayCount > 0) {
-            // 节中
-            for (let i = 0; i <= HolidayCount; i++) {
-              if (
-                !moment(year + holiday.StartDay.trim())
+        if (!Number.isNaN(Number(HolidayCount)) && HolidayCount > 0) {
+          // 节中
+          for (let i = 0; i <= HolidayCount; i++) {
+            if (
+              !moment(year + holiday.StartDay.trim())
+                .add(i, "day")
+                .isAfter(moment(year + holiday.EndDay.trim()))
+            ) {
+              h[year][
+                moment(year + holiday.StartDay.trim())
                   .add(i, "day")
-                  .isAfter(moment(year + holiday.EndDay.trim()))
-              ) {
-                h[year][
-                  moment(year + holiday.StartDay.trim())
-                    .add(i, "day")
-                    .format("YYYYMMDD")
-                ] = { ...holiday, isDayOfRest: true };
-              }
+                  .format("YYYYMMDD")
+              ] = { ...holiday, isDayOfRest: true };
             }
           }
-          if (workDay.length && !isEmpty(workDay[0])) {
-            // 节补班
-            workDay.forEach((it, idx) => {
-              h[year][year + workDay[idx]] = { ...holiday, isDayOfRest: false };
-            });
-          }
-          if (noWorkDay.length && !isEmpty(noWorkDay[0])) {
-            // 休工作日
-            noWorkDay.forEach((it, idx) => {
-              h[year][year + noWorkDay[idx]] = {
-                ...holiday,
-                isDayOfRest: true
-              };
-            });
-          }
         }
-      );
+        if (workDay.length && !isEmpty(workDay[0])) {
+          // 节补班
+          workDay.forEach((it, idx) => {
+            h[year][year + workDay[idx]] = { ...holiday, isDayOfRest: false };
+          });
+        }
+        if (noWorkDay.length && !isEmpty(noWorkDay[0])) {
+          // 休工作日
+          noWorkDay.forEach((it, idx) => {
+            h[year][year + noWorkDay[idx]] = {
+              ...holiday,
+              isDayOfRest: true
+            };
+          });
+        }
+      });
     });
     return h;
   };
@@ -320,31 +326,40 @@ class Calendar extends React.Component<CalendarType, CalendarState> {
       endDate,
       visible,
       startDate,
-      dayConfig
+      dayConfig,
+      fullScreen,
+      isBareShell
     } = this.props;
     const { holidays, selectedDate } = this.state;
 
     if (visible) {
       return (
-        <Context.Provider value={this.opt} visible={visible}>
-          <Datepicker
-            conf={this.conf}
-            months={this.months}
-            tip={tip}
-            title={title}
-            toRoof={toRoof}
-            visible={visible}
-            holidays={holidays}
-            dayConfig={dayConfig}
-            maxDate={moment(endDate)}
-            minDate={moment(startDate)}
-            selectedDate={
-              selectedDate[1]
-                ? [moment(selectedDate[0]), moment(selectedDate[1])]
-                : [moment(selectedDate[0])]
-            }
-          />
-        </Context.Provider>
+        <AnimateFrame
+          visible={visible}
+          isBareShell={isBareShell}
+          fullScreen={fullScreen}
+          toRoof={toRoof}
+        >
+          <Context.Provider value={this.opt}>
+            <Datepicker
+              conf={this.conf}
+              months={this.months}
+              tip={tip}
+              title={title}
+              toRoof={toRoof}
+              visible={visible}
+              holidays={holidays}
+              dayConfig={dayConfig}
+              maxDate={moment(endDate)}
+              minDate={moment(startDate)}
+              selectedDate={
+                selectedDate[1]
+                  ? [moment(selectedDate[0]), moment(selectedDate[1])]
+                  : [moment(selectedDate[0])]
+              }
+            />
+          </Context.Provider>
+        </AnimateFrame>
       );
     } else {
       return null;

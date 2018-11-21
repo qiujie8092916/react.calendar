@@ -1,10 +1,6 @@
 import React from "react";
 import moment from "moment";
-import { Config, DayConfig, HolidayFormat } from "./propTypes";
-
-interface ConfigExtend extends Config {
-  needTitle: boolean;
-}
+import { ConfigExtend, DayConfig, HolidayFormat } from "./propTypes";
 
 interface EachDateType {
   id: number;
@@ -20,13 +16,10 @@ class EachDate extends React.PureComponent<EachDateType, any> {
     const { conf, holiday } = this.props;
     return (
       <div
-        className={`calendarFestival flex${
-          conf.festivalCover ? " festivalCover" : ""
-        }`}
+        className={`calendarFestival flx flx-4 flx-row flx-ct ${
+          conf.festivalCover && conf.needTitle ? "flx-vbtm" : "flx-vct"
+        }${conf.festivalCover ? " festivalCover" : ""}`}
         style={conf.festivalStyle}
-        flex={`4 row h-center ${
-          conf.festivalCover && conf.needTitle ? "v-bottom" : "v-center"
-        }`}
       >
         {holiday && holiday.HolidayName}
       </div>
@@ -37,7 +30,7 @@ class EachDate extends React.PureComponent<EachDateType, any> {
     // console.timeEnd(
     //   "prepare render eachDate -> prepare render calendarDesc/placeholder"
     // );
-    return <div className="placeholder" flex="3" />;
+    return <div className="placeholder flx-3" />;
   };
 
   calendarDay = () => {
@@ -47,8 +40,9 @@ class EachDate extends React.PureComponent<EachDateType, any> {
       conf.festivalCover &&
       moment(id).format("MMDD") === holiday.HolidayDay ? null : (
       <div
-        className="calendarDay flex"
-        flex={`4 row h-center ${conf.needTitle ? "v-bottom" : "v-center"}`}
+        className={`calendarDay flx flx-4 flx-row flx-hct ${
+          conf.needTitle ? "flx-vbtm" : "flx-vct"
+        }`}
         style={Object.assign(
           {
             color:
@@ -73,8 +67,7 @@ class EachDate extends React.PureComponent<EachDateType, any> {
     const { dayConfig } = this.props;
     return (
       <div
-        className="tit flex"
-        flex="3 row h-center"
+        className="tit flx flx-3 flx-row flx-hct"
         style={dayConfig && dayConfig.titleStyle ? dayConfig.titleStyle : {}}
       >
         {dayConfig && dayConfig.title ? dayConfig.title : ""}

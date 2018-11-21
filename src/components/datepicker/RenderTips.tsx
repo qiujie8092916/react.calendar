@@ -12,7 +12,9 @@ class RenderTips extends React.PureComponent<RenderTipsType, any> {
     const { tip, tipHeight } = this.props;
     return !isEmpty(tip) ? (
       <div className="datepicker-tips">
-        <p style={{ height: `${tipHeight}rem` }}>{tip}</p>
+        <p className="tip-txt" style={{ height: `${tipHeight}rem` }}>
+          {tip}
+        </p>
       </div>
     ) : null;
   }

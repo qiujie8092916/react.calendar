@@ -41,7 +41,7 @@ export default class Rem extends React.Component {
    * 计算font-size
    */
   setDocFontSize = () => {
-    const vwNumber = parseInt(this.props.vw);
+    const vwNumber = parseInt(this.props.vw, 10);
     const winWidth = parseFloat(
       window.getComputedStyle(this.state.docElement, null).width
     );

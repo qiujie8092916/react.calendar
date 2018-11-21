@@ -2,12 +2,17 @@ import React from "react";
 import { Context } from "./context";
 import { isUndefined } from "lodash";
 import { SELECTEDTYPE } from "./selectedType";
-import { Config, DayConfig, HolidayFormat, SELECTTYPE } from "./propTypes";
+import {
+  DayConfig,
+  ConfigExtend,
+  HolidayFormat,
+  SELECTTYPE
+} from "./propTypes";
 
 import EachDate from "./EachDate";
 
 interface MonthDaysType {
-  conf?: Config;
+  conf?: ConfigExtend;
   id?: number;
   dayConfig?: DayConfig;
   selectedType?: SELECTTYPE;
@@ -26,7 +31,7 @@ class MonthDays extends React.PureComponent<MonthDaysType, any> {
       selectedType
     } = this.props;
     const defaultStyle = `${isDisabled ? " disabled" : ""}`;
-    const EConf = conf as Config;
+    const EConf = conf as ConfigExtend;
     const restStyle = `${
       holiday && !isUndefined(holiday.isDayOfRest)
         ? holiday.isDayOfRest
@@ -69,10 +74,7 @@ class MonthDays extends React.PureComponent<MonthDaysType, any> {
               >
                 <EachDate
                   id={id}
-                  conf={{
-                    ...EConf,
-                    needTitle: !!dayConfig && JSON.stringify(dayConfig) !== "{}"
-                  }}
+                  conf={EConf}
                   holiday={holiday}
                   dayConfig={dayConfig}
                 />

@@ -8,13 +8,11 @@ $ cd react.calendar && yarn install
 $ yarn start
 ```
 
-
 <h3>Import:</h3>
 
 ```
 import { Calendar } from 'react-calendar'
 ```
-
 
 <h3>CalendarProps:</h3>
 
@@ -44,7 +42,6 @@ CalendarPropTypes {
 }
 ```
 
-
 <h3>DayConfig:</h3>
 
 ```
@@ -54,7 +51,6 @@ interface DayConfig {
   disable?: boolean;
 }
 ```
-
 
 <h3>Example:</h3>
 
@@ -106,7 +102,6 @@ interface DayConfig {
 />
 ```
 
-
 <h3>API:</h3>
 
 <table>
@@ -151,7 +146,7 @@ interface DayConfig {
     <tr>
       <td align="center">selectedDate</td>
       <td>选中的日期(取决于单选还是多选 selectType)</td>
-      <td align="center">null | undefined | Array[Date] | Array[Date, Date]</td>
+      <td align="center">Null | Undefined | Array[Date] | Array[Date, Date]</td>
       <td align="center">F</td>
       <td align="center"></td>
     </tr>

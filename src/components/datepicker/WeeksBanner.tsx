@@ -11,7 +11,7 @@ class WeeksBanner extends React.PureComponent<WeeksBannerType, any> {
     const { weekHeight, weeks } = this.props;
     return (
       <div
-        className="weeks flex"
+        className="weeks flx"
         style={{
           height: `${weekHeight}rem`
         }}
@@ -20,8 +20,7 @@ class WeeksBanner extends React.PureComponent<WeeksBannerType, any> {
           return (
             <span
               key={idx}
-              className="flex"
-              flex="1 v-center around"
+              className="flx flx-1 flx-vct flx-ard"
               style={{
                 color:
                   idx === 0 || idx === weeks.length - 1 ? "#ff5722" : "#333"

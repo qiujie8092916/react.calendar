@@ -82,7 +82,7 @@ export default class UseCalendar extends React.Component {
           tip={"价格变动频繁，以实际成交价为准"}
           startDate={new Date(2018, 5, 2)} /** 6月2日 */
           endDate={new Date(2019, 1, 10)} /** 12月10日 */
-          selectType={1}
+          selectType={2}
           selectedDate={
             this.selectedType === 1 ? [singleDate] : [minDate, maxDate]
           }

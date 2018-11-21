@@ -125,7 +125,10 @@ class Month extends React.Component<MonthType, any> {
 
       return (
         <MonthDays
-          conf={conf}
+          conf={{
+            ...conf,
+            needTitle: !!dayConfig && JSON.stringify(dayConfig) !== "{}"
+          }}
           id={timestamp}
           key={timestamp}
           dayConfig={dayConfig[dayfrmat]}
@@ -153,16 +156,15 @@ class Month extends React.Component<MonthType, any> {
       <div className="months" ref={el => (this.els.monthRef = el)}>
         {conf.calendarType === 1 && (
           <div
-            className="month-banner flex stc"
+            className="month-banner flx stc flx-ct"
             style={{
               top: 0
             }}
-            flex="center"
           >
             {curMonth.format("YYYY年MM月")}
           </div>
         )}
-        <div className="month-cont flex" flex="">
+        <div className="month-cont flx">
           {everyDayOfMonth.slice(1).map((it, idx) => {
             const curDay = moment(`${month}-${this.leftPad(String(it))}`); // 当前月当前天
             const dayOfWeek = curDay.day();

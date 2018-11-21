@@ -165,12 +165,7 @@ class Datepicker extends React.Component<DatepickerType, DatepickerState> {
     const { fullScreen, calendarType, isBareShell } = conf;
     const hasTip = !isEmpty(tip);
     return (
-      <div
-        className={`datepicker${
-          isBareShell ? " bare-shell fixed animated" : " rlt"
-        }`}
-        style={isBareShell ? { top: !fullScreen ? toRoof : 0 } : {}}
-      >
+      <div className={`datepicker${isBareShell ? " bare-shell" : " rlt"}`}>
         {isBareShell ? (
           <React.Fragment>
             <Context.Consumer>
@@ -204,10 +199,9 @@ class Datepicker extends React.Component<DatepickerType, DatepickerState> {
                       });
                       this.correctionScrollMonthBanner(idx);
                     }}
-                    className={`s-month inline-flex rlt${
+                    className={`s-month il-flx flx-ct rlt${
                       this.state.slideIndex === idx ? " active" : ""
                     }`}
-                    flex="center"
                   >
                     {moment(it).format("MM月")}
                   </div>
@@ -249,8 +243,8 @@ class Datepicker extends React.Component<DatepickerType, DatepickerState> {
                 afterSlide={(idx: number) => {
                   if (idx !== this.state.slideIndex) {
                     this.setState({ slideIndex: idx });
-                    this.correctionScrollMonthBanner(idx);
                   }
+                  this.correctionScrollMonthBanner(idx);
                   if (this.state.isLoading) {
                     setTimeout(() => {
                       this.setState({
