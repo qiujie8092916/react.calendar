@@ -1,5 +1,7 @@
 import React from "react";
 
+import "./Calendar.scss";
+
 interface LoadingType {
   isShow: boolean;
 }
@@ -8,13 +10,13 @@ export default class Loading extends React.Component<LoadingType, any> {
   render() {
     return (
       <div
-        className="datepicker-load abs"
+        styleName="datepicker-load abs"
         style={{ display: this.props.isShow ? "block" : "none" }}
       >
-        <div className="datepicker-load-container">
-          <i className="dot" />
-          <i className="dot" />
-          <i className="dot" />
+        <div styleName="datepicker-load-container">
+          <i styleName="dot" />
+          <i styleName="dot" />
+          <i styleName="dot" />
         </div>
       </div>
     );

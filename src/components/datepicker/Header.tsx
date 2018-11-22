@@ -2,7 +2,7 @@ import React from "react";
 import { CalendarType } from "./propTypes";
 import { CancelFuncType } from "./context";
 
-import "./icon/iconfont.css";
+import "./Calendar.scss";
 
 interface HeaderType {
   title: CalendarType["title"];
@@ -12,10 +12,10 @@ interface HeaderType {
 class Header extends React.PureComponent<HeaderType, any> {
   render() {
     return (
-      <header className="datepicker-header flx rlt flx-ct">
+      <header styleName="datepicker-header flx rlt flx-ct">
         {this.props.title}
-        <div className="close" onClick={this.props.onCancel}>
-          <i className="iconfont">&#xe608;</i>
+        <div styleName="close" onClick={this.props.onCancel}>
+          <i className="iconfont___Zy2_S2sEs7">&#xe608;</i>
         </div>
       </header>
     );

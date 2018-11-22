@@ -11,8 +11,6 @@ import {
   defaultSelectedDate
 } from "./propTypes";
 
-import "./Calendar.scss";
-
 import "./extensions";
 import AnimateFrame from "./AnimateFrame";
 import Datepicker from "./Datepicker";

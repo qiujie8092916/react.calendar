@@ -3,6 +3,8 @@ import ReactDOM from "react-dom";
 import { CalendarType } from "./propTypes";
 import { CancelFuncType } from "./context";
 
+import "./Calendar.scss";
+
 interface DatepickerMaskType {
   onCancel: CancelFuncType;
   visible: CalendarType["visible"];
@@ -13,7 +15,7 @@ class DatepickerMask extends React.PureComponent<DatepickerMaskType, any> {
     return this.props.visible
       ? ReactDOM.createPortal(
           <div
-            className="_calendar-mask animated"
+            styleName="_calendar-mask animated"
             onClick={this.props.onCancel}
           />,
           document.getElementsByTagName("body")[0]

@@ -9,6 +9,8 @@ import {
   SELECTTYPE
 } from "./propTypes";
 
+import "./Calendar.scss";
+
 import EachDate from "./EachDate";
 
 interface MonthDaysType {
@@ -62,7 +64,7 @@ class MonthDays extends React.PureComponent<MonthDaysType, any> {
           {({ onSelect }) => {
             return (
               <div
-                className={cssStyle}
+                styleName={cssStyle}
                 onClick={() => {
                   if (this.props.isDisabled) {
                     return;
@@ -84,7 +86,7 @@ class MonthDays extends React.PureComponent<MonthDaysType, any> {
         </Context.Consumer>
       );
     } else {
-      return <div className="dayOfMonth emptyDay" />;
+      return <div styleName="dayOfMonth emptyDay" />;
     }
   }
 }

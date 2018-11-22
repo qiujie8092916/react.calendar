@@ -1,3 +1,4 @@
+@import "./icon/iconfont.css";
 /* html {
   -ms-text-size-adjust: 100%;
   -webkit-text-size-adjust: none;
@@ -8,7 +9,7 @@
   -webkit-tap-highlight-color: #0000;
 }
 
-@keyframes cld-flashPop {
+@keyframes :global(cld-flashPop) {
   0% {
     opacity: 1;
   }
@@ -19,7 +20,7 @@
     opacity: 0.1;
   }
 }
-@keyframes cld-fadeIn {
+@keyframes :global(cld-fadeIn) {
   0% {
     opacity: 0;
   }
@@ -30,7 +31,7 @@
 }
 
 /** animate */
-@keyframes cld-fadeOut {
+@keyframes :global(cld-fadeOut) {
   0% {
     opacity: 1;
   }
@@ -39,7 +40,7 @@
     opacity: 0;
   }
 }
-@keyframes cld-slideInUp {
+@keyframes :global(cld-slideInUp) {
   0% {
     transform: translate3d(0, 100%, 0);
     visibility: visible;
@@ -50,7 +51,7 @@
   }
 }
 
-@keyframes cld-slideInDown {
+@keyframes :global(cld-slideInDown) {
   0% {
     transform: translateZ(0);
     visibility: visible;
@@ -58,6 +59,20 @@
 
   to {
     transform: translate3d(0, 100%, 0);
+  }
+}
+:global {
+  .fade-enter {
+    animation-name: cld-fadeIn;
+  }
+  .fade-leave {
+    animation-name: cld-fadeOut;
+  }
+  .slideV-enter {
+    animation-name: cld-slideInUp;
+  }
+  .slideV-leave {
+    animation-name: cld-slideInDown;
   }
 }
 
@@ -72,20 +87,6 @@
 .animated {
   animation-duration: 0.35s;
   animation-fill-mode: both;
-}
-.fade-enter {
-  animation-name: cld-fadeIn;
-}
-
-.fade-leave {
-  animation-name: cld-fadeOut;
-}
-.slideV-enter {
-  animation-name: cld-slideInUp;
-}
-
-.slideV-leave {
-  animation-name: cld-slideInDown;
 }
 .flx-1 {
   flex: 1;
@@ -163,6 +164,9 @@
   overflow: auto;
   width: 10rem;
   bottom: 0;
+  /*   &.bare-shell .datepicker-container.horizontal .month-wrapper .months {
+    height: 9.72rem;
+  } */
   .datepicker-header {
     font-size: 0.4rem;
     line-height: 0.82rem;
@@ -262,11 +266,11 @@
           }
         }
       }
-      .month-wrapper {
-        .months {
-          height: 9.72rem;
-        }
-      }
+      // .month-wrapper {
+      //   .months {
+      //     height: 9.72rem;
+      //   }
+      // }
     }
     .month-wrapper .months {
       .month-banner {

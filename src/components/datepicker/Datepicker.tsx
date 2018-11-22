@@ -6,6 +6,8 @@ import BScroll from "better-scroll";
 import Carousel from "nuka-carousel";
 import { Config, DayConfig, defaultSelectedMoment } from "./propTypes";
 
+import "./Calendar.scss";
+
 import Month from "./Month";
 import Header from "./Header";
 import Loading from "./Loading";
@@ -164,8 +166,9 @@ class Datepicker extends React.Component<DatepickerType, DatepickerState> {
     const { tip, conf, title, months, toRoof } = this.props;
     const { fullScreen, calendarType, isBareShell } = conf;
     const hasTip = !isEmpty(tip);
+
     return (
-      <div className={`datepicker${isBareShell ? " bare-shell" : " rlt"}`}>
+      <div styleName={isBareShell ? "datepicker bare-shell" : "datepicker rlt"}>
         {isBareShell ? (
           <React.Fragment>
             <Context.Consumer>
@@ -179,14 +182,14 @@ class Datepicker extends React.Component<DatepickerType, DatepickerState> {
           <Loading isShow={this.state.isLoading} />
         )}
         <div
-          className={`datepicker-container ${
+          styleName={`datepicker-container ${
             calendarType === 1 ? "vertical" : "horizontal"
           }`}
         >
           {calendarType === 2 && (
-            <div className="view-scroll" ref={el => (this.els.viewScroll = el)}>
+            <div styleName="view-scroll" ref={el => (this.els.viewScroll = el)}>
               <div
-                className="scroll-monthBanner"
+                styleName="scroll-monthBanner"
                 ref={el => (this.els.scrollMonthBanner = el)}
               >
                 {months.map((it, idx) => (
@@ -199,7 +202,7 @@ class Datepicker extends React.Component<DatepickerType, DatepickerState> {
                       });
                       this.correctionScrollMonthBanner(idx);
                     }}
-                    className={`s-month il-flx flx-ct rlt${
+                    styleName={`s-month il-flx flx-ct rlt${
                       this.state.slideIndex === idx ? " active" : ""
                     }`}
                   >
@@ -216,7 +219,7 @@ class Datepicker extends React.Component<DatepickerType, DatepickerState> {
           />
           <div
             ref={el => (this.els.scrollWrapper = el)}
-            className="month-wrapper"
+            styleName="month-wrapper"
             style={
               calendarType === 1
                 ? {

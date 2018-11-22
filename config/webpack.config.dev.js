@@ -4,6 +4,7 @@ const autoprefixer = require("autoprefixer");
 const path = require("path");
 const webpack = require("webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const CaseSensitivePathsPlugin = require("case-sensitive-paths-webpack-plugin");
 const InterpolateHtmlPlugin = require("react-dev-utils/InterpolateHtmlPlugin");
 const WatchMissingNodeModulesPlugin = require("react-dev-utils/WatchMissingNodeModulesPlugin");
@@ -163,6 +164,10 @@ module.exports = {
             include: paths.appSrc,
             use: [
               {
+                // babel settings in in .babelrc file
+                loader: "babel-loader"
+              },
+              {
                 loader: require.resolve("ts-loader"),
                 options: {
                   // disable type checker - we will use it in fork plugin
@@ -178,38 +183,46 @@ module.exports = {
           // in development "style" loader enables hot editing of CSS.
           {
             test: /\.(css|scss|sass)$/,
-            use: [
-              require.resolve("style-loader"),
-              {
-                loader: require.resolve("css-loader"),
-                options: {
-                  importLoaders: 1
-                }
-              },
-              {
-                loader: require.resolve("postcss-loader"),
-                options: {
-                  // Necessary for external CSS imports to work
-                  // https://github.com/facebookincubator/create-react-app/issues/2677
-                  ident: "postcss",
-                  plugins: () => [
-                    require("postcss-flexbugs-fixes"),
-                    autoprefixer({
-                      browsers: [
-                        ">0.01%",
-                        "last 4 versions",
-                        "Firefox ESR",
-                        "not ie < 9" // React doesn't support IE8 anyway
-                      ],
-                      flexbox: "no-2009"
-                    })
-                  ]
-                }
-              },
-              {
-                loader: require.resolve("sass-loader") // compiles sass to CSS
-              }
-            ]
+            loader: ExtractTextPlugin.extract(
+              Object.assign({
+                fallback: {
+                  loader: require.resolve("style-loader")
+                },
+                use: [
+                  {
+                    loader: require.resolve("css-loader"),
+                    options: {
+                      importLoaders: 1,
+                      modules: true,
+                      localIdentName: "[local]___[hash:base64:10]"
+                    }
+                  },
+                  {
+                    loader: require.resolve("postcss-loader"),
+                    options: {
+                      // Necessary for external CSS imports to work
+                      // https://github.com/facebookincubator/create-react-app/issues/2677
+                      ident: "postcss",
+                      plugins: () => [
+                        require("postcss-flexbugs-fixes"),
+                        autoprefixer({
+                          browsers: [
+                            ">0.01%",
+                            "last 4 versions",
+                            "Firefox ESR",
+                            "not ie < 9" // React doesn't support IE8 anyway
+                          ],
+                          flexbox: "no-2009"
+                        })
+                      ]
+                    }
+                  },
+                  {
+                    loader: require.resolve("sass-loader") // compiles sass to CSS
+                  }
+                ]
+              })
+            )
           },
           // "file" loader makes sure those assets get served by WebpackDevServer.
           // When you `import` an asset, you get its (virtual) filename.
@@ -229,7 +242,11 @@ module.exports = {
           },
           {
             test: /\.scss$/,
-            loaders: ["style-loader", "css-loader", "sass-loader"]
+            loaders: ExtractTextPlugin.extract(
+              "style-loader",
+              "css-loader",
+              "sass-loader"
+            )
           }
         ]
       }
@@ -248,6 +265,11 @@ module.exports = {
       inject: true,
       template: paths.appHtml
     }),
+
+    new ExtractTextPlugin({
+      filename: "static/css/[name].[contenthash:8].css"
+    }),
+
     // Add module names to factory functions so they appear in browser profiler.
     new webpack.NamedModulesPlugin(),
     // Makes some environment variables available to the JS code, for example:
