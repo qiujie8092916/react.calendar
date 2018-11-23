@@ -1,3 +1,3 @@
-import Calendar from "./src/components/datepicker/Calendar";
+import Calendar from "./src/Calendar";
 
 export default Calendar;

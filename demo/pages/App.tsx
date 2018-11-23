@@ -1,13 +1,10 @@
-// vendor lib
-import * as React from "react";
+import React from "react";
+import Calendar from "./../../src/Calendar";
+import { DateObject } from "../../src/propTypes";
 
-// common script
-import "./index.scss";
+import "./App.scss";
 
-// custom components
-import Calendar from "../../components/datepicker/Calendar";
-
-export default class UseCalendar extends React.Component {
+class App extends React.Component {
   state = {
     maxDate: new Date(2018, 9, 2),
     minDate: new Date(2018, 8, 21),
@@ -46,11 +43,11 @@ export default class UseCalendar extends React.Component {
     this.toggleHandler(true);
   }
 
-  selectedHandler = date => {
+  selectedHandler = (date: DateObject) => {
     console.log(date.std);
   };
 
-  confirmHandler = (...selected) => {
+  confirmHandler = (...selected: DateObject[]) => {
     console.log(
       `confirm: ${selected[0].std}${selected[1] ? ` - ${selected[1].std}` : ""}`
     );
@@ -67,7 +64,7 @@ export default class UseCalendar extends React.Component {
     }
   };
 
-  toggleHandler = status => {
+  toggleHandler = (status: boolean) => {
     this.setState({
       toggleCalender: status
     });
@@ -102,3 +99,5 @@ export default class UseCalendar extends React.Component {
     );
   }
 }
+
+export default App;
