@@ -2,7 +2,7 @@ import React from "react";
 import moment from "moment";
 import { ConfigExtend, DayConfig, HolidayFormat } from "./propTypes";
 
-import "./Calendar.scss";
+import "./commonStyle.css";
 
 interface EachDateType {
   id: number;
@@ -18,7 +18,7 @@ class EachDate extends React.PureComponent<EachDateType, any> {
     const { conf, holiday } = this.props;
     return (
       <div
-        styleName={`calendarFestival flx flx-4 flx-row flx-ct ${
+        className={`calendarFestival flx flx-4 flx-row flx-ct ${
           conf.festivalCover && conf.needTitle ? "flx-vbtm" : "flx-vct"
         }${conf.festivalCover ? " festivalCover" : ""}`}
         style={conf.festivalStyle}
@@ -32,7 +32,7 @@ class EachDate extends React.PureComponent<EachDateType, any> {
     // console.timeEnd(
     //   "prepare render eachDate -> prepare render calendarDesc/placeholder"
     // );
-    return <div styleName="placeholder flx-3" />;
+    return <div className="placeholder flx-3" />;
   };
 
   calendarDay = () => {
@@ -42,7 +42,7 @@ class EachDate extends React.PureComponent<EachDateType, any> {
       conf.festivalCover &&
       moment(id).format("MMDD") === holiday.HolidayDay ? null : (
       <div
-        styleName={`calendarDay flx flx-4 flx-row flx-hct ${
+        className={`calendarDay flx flx-4 flx-row flx-hct ${
           conf.needTitle ? "flx-vbtm" : "flx-vct"
         }`}
         style={Object.assign(
@@ -69,7 +69,7 @@ class EachDate extends React.PureComponent<EachDateType, any> {
     const { dayConfig } = this.props;
     return (
       <div
-        styleName="tit flx flx-3 flx-row flx-hct"
+        className="tit flx flx-3 flx-row flx-hct"
         style={dayConfig && dayConfig.titleStyle ? dayConfig.titleStyle : {}}
       >
         {dayConfig && dayConfig.title ? dayConfig.title : ""}

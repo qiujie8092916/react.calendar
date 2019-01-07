@@ -3,9 +3,9 @@ import moment from "moment";
 import { Config, DayConfig, defaultSelectedMoment } from "./propTypes";
 import { SELECTEDTYPE } from "./selectedType";
 
-import "./Calendar.scss";
-
 import MonthDays from "./MonthDays";
+
+import "./commonStyle.css";
 
 interface MonthType {
   month: string;
@@ -155,10 +155,10 @@ class Month extends React.Component<MonthType, any> {
     const everyDayOfMonth = [...Array(dayOfMonth + 1).keys()];
 
     return (
-      <div styleName="months" ref={el => (this.els.monthRef = el)}>
+      <div className="months" ref={el => (this.els.monthRef = el)}>
         {conf.calendarType === 1 && (
           <div
-            styleName="month-banner flx stc flx-ct"
+            className="month-banner stc flx flx-ct"
             style={{
               top: 0
             }}
@@ -166,7 +166,7 @@ class Month extends React.Component<MonthType, any> {
             {curMonth.format("YYYY年MM月")}
           </div>
         )}
-        <div styleName="month-cont flx">
+        <div className="month-cont flx">
           {everyDayOfMonth.slice(1).map((it, idx) => {
             const curDay = moment(`${month}-${this.leftPad(String(it))}`); // 当前月当前天
             const dayOfWeek = curDay.day();

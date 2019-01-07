@@ -10,6 +10,8 @@ export enum CALENDARTYPE {
   horizontalBoard
 }
 
+type originDate = Date | null | undefined;
+
 export type defaultSelectedDate = [Date, null | Date] | [Date];
 export type defaultSelectedMoment =
   | [moment.Moment, null | moment.Moment]
@@ -29,6 +31,7 @@ export interface CalendarType extends Config {
   title: string;
   toRoof: string;
   visible: boolean;
+  className?: string;
 }
 
 export interface DayConfig {
@@ -38,7 +41,7 @@ export interface DayConfig {
 }
 
 export interface DateObject {
-  date: Date | null;
+  date: originDate;
   std: string;
 }
 

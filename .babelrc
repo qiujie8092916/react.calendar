@@ -1,18 +1,18 @@
 {
-  "presets": [["react-app"], ["es2015"], ["stage-1"]],
-  "plugins": [
+  "presets": [
+    ["react-app"],
     [
-      "react-css-modules",
+      "env",
       {
-        "filetypes": {
-          ".scss": {
-            "syntax": "postcss-scss"
-          }
+        "targets": {
+          "browsers": ["last 2 versions", "ie >= 7"],
+          "chrome": "58"
         },
-        "handleMissingStyleName": "warn",
-        "generateScopedName": "[local]___[hash:base64:10]"
+        "modules": false,
+        "useBuiltIns": true,
+        "debug": true
       }
-    ],
-    ["transform-decorators-legacy"]
-  ]
+    ]
+  ],
+  "plugins": ["transform-class-properties"]
 }

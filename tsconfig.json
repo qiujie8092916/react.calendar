@@ -19,7 +19,8 @@
     "noUnusedLocals": true,
     "allowSyntheticDefaultImports": true,
     "experimentalDecorators": true,
-    "downlevelIteration": true
+    "downlevelIteration": true,
+    "skipLibCheck": true
   },
   "include": ["typings/*.d.ts", "src/**/*", "demo/**/*"],
   "exclude": [

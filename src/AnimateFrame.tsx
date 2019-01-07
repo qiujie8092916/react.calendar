@@ -1,6 +1,5 @@
 import React from "react";
-
-import "./Calendar.scss";
+import styled from "styled-components";
 
 interface AnimateFrameType {
   isBareShell: boolean;
@@ -14,7 +13,7 @@ class AnimateFrame extends React.Component<AnimateFrameType> {
     const { toRoof, visible, fullScreen, isBareShell } = this.props;
     return (
       <div
-        styleName="animated fixed"
+        className="animated fixed"
         style={Object.assign(
           {
             background: "#fff",
@@ -32,4 +31,12 @@ class AnimateFrame extends React.Component<AnimateFrameType> {
   }
 }
 
-export default AnimateFrame;
+export default styled(AnimateFrame)`
+  .animated {
+    animation-duration: 0.35s;
+    animation-fill-mode: both;
+  }
+  .fixed {
+    position: fixed;
+  }
+`;

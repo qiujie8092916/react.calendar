@@ -6,13 +6,13 @@ import BScroll from "better-scroll";
 import Carousel from "nuka-carousel";
 import { Config, DayConfig, defaultSelectedMoment } from "./propTypes";
 
-import "./Calendar.scss";
-
 import Month from "./Month";
 import Header from "./Header";
 import Loading from "./Loading";
 import RenderTips from "./RenderTips";
 import WeeksBanner from "./WeeksBanner";
+
+import "./commonStyle.css";
 
 const LANG = {
   MONTH_POSTFIX: "月",
@@ -119,12 +119,15 @@ class Datepicker extends React.Component<DatepickerType, DatepickerState> {
   };
 
   correctionScrollMonthBanner = (idx: number): void => {
+    const eachMonth = this.els.eachMonth[idx] as Element;
     const clientWidth = document.documentElement
       ? document.documentElement.clientWidth
       : 0;
-    const curItem = this.els.eachMonth[idx].getBoundingClientRect();
-    const correctionOffset = clientWidth / 2 - curItem.width / 2;
-    this.bScroll.scrollBy(correctionOffset - curItem.left);
+    if (eachMonth) {
+      const curItem = eachMonth.getBoundingClientRect();
+      const correctionOffset = clientWidth / 2 - curItem.width / 2;
+      this.bScroll.scrollBy(correctionOffset - curItem.left);
+    }
   };
 
   getItemMonth = () => {
@@ -168,7 +171,7 @@ class Datepicker extends React.Component<DatepickerType, DatepickerState> {
     const hasTip = !isEmpty(tip);
 
     return (
-      <div styleName={isBareShell ? "datepicker bare-shell" : "datepicker rlt"}>
+      <div className={`datepicker ${isBareShell ? "bare-shell" : "rlt"}`}>
         {isBareShell ? (
           <React.Fragment>
             <Context.Consumer>
@@ -182,14 +185,14 @@ class Datepicker extends React.Component<DatepickerType, DatepickerState> {
           <Loading isShow={this.state.isLoading} />
         )}
         <div
-          styleName={`datepicker-container ${
+          className={`datepicker-container ${
             calendarType === 1 ? "vertical" : "horizontal"
           }`}
         >
           {calendarType === 2 && (
-            <div styleName="view-scroll" ref={el => (this.els.viewScroll = el)}>
+            <div className="view-scroll" ref={el => (this.els.viewScroll = el)}>
               <div
-                styleName="scroll-monthBanner"
+                className="scroll-monthBanner"
                 ref={el => (this.els.scrollMonthBanner = el)}
               >
                 {months.map((it, idx) => (
@@ -202,7 +205,7 @@ class Datepicker extends React.Component<DatepickerType, DatepickerState> {
                       });
                       this.correctionScrollMonthBanner(idx);
                     }}
-                    styleName={`s-month il-flx flx-ct rlt${
+                    className={`s-month il-flx flx-ct rlt${
                       this.state.slideIndex === idx ? " active" : ""
                     }`}
                   >
@@ -219,7 +222,7 @@ class Datepicker extends React.Component<DatepickerType, DatepickerState> {
           />
           <div
             ref={el => (this.els.scrollWrapper = el)}
-            styleName="month-wrapper"
+            className="month-wrapper"
             style={
               calendarType === 1
                 ? {

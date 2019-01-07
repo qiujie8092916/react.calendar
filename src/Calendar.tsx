@@ -12,6 +12,7 @@ import {
 } from "./propTypes";
 
 import "./extensions";
+import "./icon/iconfont.css";
 import AnimateFrame from "./AnimateFrame";
 import Datepicker from "./Datepicker";
 import DatepickerMask from "./DatepickerMask";
@@ -367,20 +368,22 @@ class Calendar extends React.Component<CalendarType, CalendarState> {
   render() {
     const { visible, isBareShell } = this.props;
     return (
-      <React.Fragment>
-        {isBareShell ? (
-          <React.Fragment>
-            <Animate showProp="visible" transitionName="slideV">
-              {this.getDatepicker()}
-            </Animate>
-            <Animate showProp="visible" transitionName="fade">
-              <DatepickerMask visible={visible} onCancel={this.onCancel} />
-            </Animate>
-          </React.Fragment>
-        ) : (
-          this.getDatepicker()
-        )}
-      </React.Fragment>
+      <div className={this.props.className}>
+        <React.Fragment>
+          {isBareShell ? (
+            <React.Fragment>
+              <Animate showProp="visible" transitionName="slideV">
+                {this.getDatepicker()}
+              </Animate>
+              <Animate showProp="visible" transitionName="fade">
+                <DatepickerMask visible={visible} onCancel={this.onCancel} />
+              </Animate>
+            </React.Fragment>
+          ) : (
+            this.getDatepicker()
+          )}
+        </React.Fragment>
+      </div>
     );
   }
 }

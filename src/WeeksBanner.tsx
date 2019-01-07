@@ -1,6 +1,6 @@
 import React from "react";
 
-import "./Calendar.scss";
+import "./commonStyle.css";
 
 interface WeeksBannerType {
   hasTip: boolean;
@@ -13,7 +13,7 @@ class WeeksBanner extends React.PureComponent<WeeksBannerType, any> {
     const { weekHeight, weeks } = this.props;
     return (
       <div
-        styleName="weeks flx"
+        className="weeks flx"
         style={{
           height: `${weekHeight}rem`
         }}
@@ -22,7 +22,7 @@ class WeeksBanner extends React.PureComponent<WeeksBannerType, any> {
           return (
             <span
               key={idx}
-              styleName="flx flx-1 flx-vct flx-ard"
+              className="flx flx-1 flx-vct flx-ard"
               style={{
                 color:
                   idx === 0 || idx === weeks.length - 1 ? "#ff5722" : "#333"

@@ -1,8 +1,8 @@
 import React from "react";
-import Calendar from "./../../src/Calendar";
+import Calendar from "./../../src/index";
 import { DateObject } from "../../src/propTypes";
 
-import "./App.scss";
+import "./App.css";
 
 class App extends React.Component {
   state = {
