@@ -1,17 +1,13 @@
+*,
+html,
 body {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  min-height: 100%;
   margin: 0;
   padding: 0;
   font-family: sans-serif;
-}
-button {
-  border: 1px solid #666;
-  background: #fff;
-  padding: 0.1rem 0.5rem;
-  border-radius: 1rem;
-  margin: 1rem auto 0 !important;
-  display: block;
-  outline: none;
-}
-button:active {
-  background-color: #d2e8fb;
 }

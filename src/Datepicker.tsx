@@ -4,6 +4,7 @@ import { isEmpty } from "lodash";
 import { Context } from "./context";
 import BScroll from "better-scroll";
 import Carousel from "nuka-carousel";
+import styled from "styled-components";
 import { Config, DayConfig, defaultSelectedMoment } from "./propTypes";
 
 import Month from "./Month";
@@ -12,13 +13,13 @@ import Loading from "./Loading";
 import RenderTips from "./RenderTips";
 import WeeksBanner from "./WeeksBanner";
 
-import "./commonStyle.css";
-
 const LANG = {
   MONTH_POSTFIX: "月",
   WEEKS: ["日", "一", "二", "三", "四", "五", "六"],
   YEAR_POSTFIX: "年"
 };
+
+const BOUNCETIME = 500;
 
 interface DatepickerType {
   conf: Config;
@@ -32,6 +33,7 @@ interface DatepickerType {
   title: string;
   toRoof: string;
   selectedDate: defaultSelectedMoment;
+  className?: string;
 }
 
 interface DatepickerState {
@@ -66,30 +68,56 @@ class Datepicker extends React.Component<DatepickerType, DatepickerState> {
   weekHeight = 0.6;
 
   componentDidMount() {
-    setTimeout(() => {
-      if (this.props.conf.calendarType === 2) {
-        this.initScrollMonthBanner();
-      }
-      this.setPosition();
-    }, 0);
+    if (this.props.conf.calendarType === 2) {
+      setTimeout(this.initScrollMonthBanner, 0);
+    }
+    this.setPosition();
+  }
+
+  componentDidUpdate(prevProps: DatepickerType) {
+    if (prevProps.months !== this.props.months) {
+      this.initScrollMonthBanner();
+    }
   }
 
   setPosition = () => {
+    let index = 0;
     const { conf, selectedDate, months } = this.props;
-    const index = months.findIndex(
-      it => it === selectedDate[0].format("YYYY-MM")
-    );
+    switch (conf.selectType) {
+      case 1:
+        index = months.findIndex(
+          it => it === selectedDate[0].format("YYYY-MM")
+        );
+        break;
+      case 2:
+        index = months.findIndex(
+          it => it === selectedDate[0].format("YYYY-MM")
+        );
+        break;
+    }
 
     switch (conf.calendarType) {
       case 1:
-        if (this.els.scrollWrapper) {
+        setTimeout(() => {
+          const scrollWrapper = this.els.scrollWrapper as HTMLDivElement;
           const monthPosition = this.els.monthRef[index].getPosition();
-          const selfPosition = this.els.scrollWrapper.getBoundingClientRect();
-          this.els.scrollWrapper.scrollTop =
-            monthPosition.top - selfPosition.top;
-        }
+          const selfPosition = scrollWrapper.getBoundingClientRect();
+          scrollWrapper.scrollTop =
+            (monthPosition && monthPosition.top ? monthPosition.top : 0) -
+            (selfPosition && selfPosition.top ? selfPosition.top : 0);
+          this.setState({
+            isLoading: !this.props.visible
+          });
+        }, 0);
         break;
       case 2:
+        if (index === 0 && this.state.isLoading) {
+          setTimeout(() => {
+            this.setState({
+              isLoading: !this.props.visible
+            });
+          }, 0);
+        }
         this.setState({
           slideIndex: index
         });
@@ -98,35 +126,59 @@ class Datepicker extends React.Component<DatepickerType, DatepickerState> {
   };
 
   initScrollMonthBanner = () => {
-    const EScrollMonthBanner = this.els.scrollMonthBanner as HTMLDivElement;
-    const EviewScroll = this.els.viewScroll as HTMLDivElement;
-    const MonthBannerBlockWidth = getComputedStyle(
-      EScrollMonthBanner.children[0],
-      null
-    ).width;
-    EScrollMonthBanner.style.width = `${
-      EScrollMonthBanner.children && EScrollMonthBanner.children.length
-        ? parseFloat(MonthBannerBlockWidth as string) *
-          EScrollMonthBanner.children.length
+    const ElsviewScroll = this.els.viewScroll as HTMLDivElement;
+    const ElsScrollMonthBanner = this.els.scrollMonthBanner as HTMLDivElement;
+    const firstMonthBanner = ElsScrollMonthBanner.children[0];
+    const firstMonthBannerWidth = getComputedStyle(firstMonthBanner, null)
+      .width as string;
+    ElsScrollMonthBanner.style.width = `${
+      ElsScrollMonthBanner.children && ElsScrollMonthBanner.children.length
+        ? parseFloat(firstMonthBannerWidth) *
+          ElsScrollMonthBanner.children.length
         : 0
     }px`;
-    this.bScroll = new BScroll(EviewScroll, {
-      bounceTime: 500,
-      click: true,
-      scrollX: true,
-      scrollY: false
+    if (!this.bScroll) {
+      this.bScroll = new BScroll(ElsviewScroll, {
+        click: true,
+        scrollX: true,
+        scrollY: false,
+        stopPropagation: true,
+        tap: true
+      });
+    }
+  };
+
+  switchTab = (idx: number) => {
+    this.setState({
+      slideIndex: idx
     });
+    this.correctionScrollMonthBanner(idx);
   };
 
   correctionScrollMonthBanner = (idx: number): void => {
-    const eachMonth = this.els.eachMonth[idx] as Element;
-    const clientWidth = document.documentElement
-      ? document.documentElement.clientWidth
-      : 0;
-    if (eachMonth) {
-      const curItem = eachMonth.getBoundingClientRect();
-      const correctionOffset = clientWidth / 2 - curItem.width / 2;
-      this.bScroll.scrollBy(correctionOffset - curItem.left);
+    const scrollMonthBanner = this.els.scrollMonthBanner as HTMLDivElement;
+    const clientWidth = document.documentElement.clientWidth;
+    const leftBorder = 0;
+    const rightBorder =
+      -1 * (parseFloat(scrollMonthBanner.style.width as string) - clientWidth);
+    const curItem = this.els.eachMonth[idx].getBoundingClientRect();
+    const correctionOffset = (clientWidth - curItem.width) / 2;
+    const scrollwrapperAbsDistance = scrollMonthBanner.getBoundingClientRect()
+      .left;
+    const scrollRltDistance = correctionOffset - curItem.left;
+    // debugger;
+    if (leftBorder < scrollwrapperAbsDistance + scrollRltDistance) {
+      // 到达左边界
+      console.log("arrive left border");
+      this.bScroll.scrollTo(leftBorder, 0, BOUNCETIME);
+    } else if (scrollwrapperAbsDistance + scrollRltDistance < rightBorder) {
+      // 到达右边界
+      console.log("arrive right border");
+      this.bScroll.scrollTo(rightBorder, 0, BOUNCETIME);
+    } else {
+      // 正常
+      console.log("normally scroll");
+      this.bScroll.scrollBy(scrollRltDistance, 0, BOUNCETIME);
     }
   };
 
@@ -147,7 +199,7 @@ class Datepicker extends React.Component<DatepickerType, DatepickerState> {
           // console.time("prepare map month -> should update Month");
           return (
             <Month
-              ref={el => (this.els.monthRef[idx] = el)}
+              ref={(el: any) => (this.els.monthRef[idx] = el)}
               key={idx}
               month={it}
               conf={conf}
@@ -171,8 +223,13 @@ class Datepicker extends React.Component<DatepickerType, DatepickerState> {
     const hasTip = !isEmpty(tip);
 
     return (
-      <div className={`datepicker ${isBareShell ? "bare-shell" : "rlt"}`}>
-        {isBareShell ? (
+      <div
+        className={`${this.props.className}${
+          isBareShell ? "" : " rlt" /* datepicker bare-shell */
+        }`}
+      >
+        <Loading isShow={this.state.isLoading} />
+        {isBareShell && (
           <React.Fragment>
             <Context.Consumer>
               {({ onCancel }) => <Header title={title} onCancel={onCancel} />}
@@ -181,8 +238,6 @@ class Datepicker extends React.Component<DatepickerType, DatepickerState> {
               {hasTip && <RenderTips tipHeight={this.tipHeight} tip={tip} />}
             </React.Fragment>
           </React.Fragment>
-        ) : (
-          <Loading isShow={this.state.isLoading} />
         )}
         <div
           className={`datepicker-container ${
@@ -200,10 +255,7 @@ class Datepicker extends React.Component<DatepickerType, DatepickerState> {
                     key={idx}
                     ref={el => (this.els.eachMonth[idx] = el)}
                     onClick={() => {
-                      this.setState({
-                        slideIndex: idx
-                      });
-                      this.correctionScrollMonthBanner(idx);
+                      this.switchTab(idx);
                     }}
                     className={`s-month il-flx flx-ct rlt${
                       this.state.slideIndex === idx ? " active" : ""
@@ -227,30 +279,27 @@ class Datepicker extends React.Component<DatepickerType, DatepickerState> {
               calendarType === 1
                 ? {
                     height: `calc(${
-                      document.documentElement
-                        ? document.documentElement.clientHeight
-                        : 0
+                      document.documentElement.clientHeight
                     }px - ${!fullScreen ? toRoof : "0px"} - ${(hasTip
                       ? this.tipHeight
                       : 0) +
-                      this.weekHeight +
-                      this.titleHeight}rem)`
+                      (isBareShell
+                        ? this.weekHeight + this.titleHeight
+                        : 0)}rem)`
                   }
                 : {}
-              /* ) */
             }
           >
             {calendarType === 2 ? (
               <Carousel
                 className="carousel"
-                withoutControls={true}
+                withoutControls
                 heightMode="current"
                 slideIndex={this.state.slideIndex}
                 afterSlide={(idx: number) => {
-                  if (idx !== this.state.slideIndex) {
-                    this.setState({ slideIndex: idx });
+                  if (!Number.isNaN(idx) && idx !== this.state.slideIndex) {
+                    this.switchTab(idx);
                   }
-                  this.correctionScrollMonthBanner(idx);
                   if (this.state.isLoading) {
                     setTimeout(() => {
                       this.setState({
@@ -272,4 +321,45 @@ class Datepicker extends React.Component<DatepickerType, DatepickerState> {
   }
 }
 
-export default Datepicker;
+export default styled(Datepicker)`
+  /* background: #fff; */
+  overflow: auto;
+  width: 10rem;
+  bottom: 0;
+  .datepicker-container {
+    &.vertical {
+      .month-wrapper {
+        overflow: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+    }
+    &.horizontal {
+      overflow: hidden;
+      .scroll-monthBanner {
+        height: 0.7rem;
+        white-space: nowrap;
+        font-size: 14px;
+        &::-webkit-scrollbar {
+          display: none;
+        }
+      }
+      .s-month {
+        height: 100%;
+        width: 2.5rem;
+        font-size: 0.37rem;
+        &.active {
+          color: #1a9fef;
+          &:after {
+            content: "";
+            width: 100%;
+            height: 0.04rem;
+            background-color: #1a9fef;
+            position: absolute;
+            left: 0;
+            bottom: 0;
+          }
+        }
+      }
+    }
+  }
+`;

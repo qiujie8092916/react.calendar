@@ -1,25 +1,47 @@
 import React from "react";
 import moment from "moment";
-import { ConfigExtend, DayConfig, HolidayFormat } from "./propTypes";
-
-import "./commonStyle.css";
+import { isEqual, isEmpty } from "lodash";
+import { Config, DayConfig, HolidayFormat } from "./propTypes";
 
 interface EachDateType {
   id: number;
-  conf: ConfigExtend;
+  conf: Config;
   holiday?: HolidayFormat;
   dayConfig?: DayConfig;
+  needTitle?: boolean;
 }
 
-class EachDate extends React.PureComponent<EachDateType, any> {
+interface EachDateState {
+  needTitle?: boolean;
+}
+
+class EachDate extends React.PureComponent<EachDateType, EachDateState> {
   toDay = moment();
+
+  state = {
+    needTitle: this.props.needTitle || !isEmpty(this.props.dayConfig)
+  };
+
+  componentWillReceiveProps(nextProps: EachDateType) {
+    if (!isEqual(this.props.dayConfig, nextProps.dayConfig)) {
+      // debugger;
+      this.setState({
+        needTitle: !isEmpty(nextProps.dayConfig)
+      });
+    }
+    if (this.props.needTitle !== nextProps.needTitle) {
+      this.setState({
+        needTitle: nextProps.needTitle
+      });
+    }
+  }
 
   calendarFestival = () => {
     const { conf, holiday } = this.props;
     return (
       <div
         className={`calendarFestival flx flx-4 flx-row flx-ct ${
-          conf.festivalCover && conf.needTitle ? "flx-vbtm" : "flx-vct"
+          conf.festivalCover && this.state.needTitle ? "flx-vbtm" : "flx-vct"
         }${conf.festivalCover ? " festivalCover" : ""}`}
         style={conf.festivalStyle}
       >
@@ -43,7 +65,7 @@ class EachDate extends React.PureComponent<EachDateType, any> {
       moment(id).format("MMDD") === holiday.HolidayDay ? null : (
       <div
         className={`calendarDay flx flx-4 flx-row flx-hct ${
-          conf.needTitle ? "flx-vbtm" : "flx-vct"
+          this.state.needTitle ? "flx-vbtm" : "flx-vct"
         }`}
         style={Object.assign(
           {
@@ -70,9 +92,9 @@ class EachDate extends React.PureComponent<EachDateType, any> {
     return (
       <div
         className="tit flx flx-3 flx-row flx-hct"
-        style={dayConfig && dayConfig.titleStyle ? dayConfig.titleStyle : {}}
+        style={(dayConfig && dayConfig.titleStyle) || {}}
       >
-        {dayConfig && dayConfig.title ? dayConfig.title : ""}
+        {(dayConfig && dayConfig.title) || ""}
       </div>
     );
   };
@@ -84,7 +106,6 @@ class EachDate extends React.PureComponent<EachDateType, any> {
       conf.showFestival &&
       holiday &&
       moment(id).format("MMDD") === holiday.HolidayDay;
-
     return (
       <React.Fragment>
         {shouldFestival ? (
@@ -93,7 +114,7 @@ class EachDate extends React.PureComponent<EachDateType, any> {
           this.placeholder()
         ) : null}
         {this.calendarDay()}
-        {conf.needTitle
+        {this.state.needTitle
           ? dayConfig
             ? this.calendarDesc()
             : this.placeholder()

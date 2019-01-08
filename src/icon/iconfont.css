@@ -1,23 +1,10 @@
 @font-face {
-  font-family: "iconfont___Zy2_S2sEs7";
-  src: url("./iconfont.eot?t=1541059900364"); /* IE9*/
-  src: url("./iconfont.eot?t=1541059900364#iefix") format("embedded-opentype"),
-    /* IE6-IE8 */
-      url("data:application/x-font-woff;charset=utf-8;base64,d09GRgABAAAAAAQIAAsAAAAABkwAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAABHU1VCAAABCAAAADMAAABCsP6z7U9TLzIAAAE8AAAARAAAAFY8fkf6Y21hcAAAAYAAAABLAAABcOcwtcJnbHlmAAABzAAAAFgAAABYpsWyRWhlYWQAAAIkAAAALwAAADYTIPB4aGhlYQAAAlQAAAAcAAAAJAfeA4NobXR4AAACcAAAAAgAAAAICAAAAGxvY2EAAAJ4AAAABgAAAAYALAAAbWF4cAAAAoAAAAAeAAAAIAEOACVuYW1lAAACoAAAAUUAAAJtPlT+fXBvc3QAAAPoAAAAHQAAAC5RfXZ5eJxjYGRgYOBikGPQYWB0cfMJYeBgYGGAAJAMY05meiJQDMoDyrGAaQ4gZoOIAgCKIwNPAHicY2BkYWCcwMDKwMHUyXSGgYGhH0IzvmYwYuRgYGBiYGVmwAoC0lxTGByecTzjYG7438AQw9zA0AAUZgTJAQDeZQvzeJxjYGBgZWBgYAZiHSBmYWBgDGFgZAABP6AoI1icmYELLM7CoARWwwISf8bx/z+MBPJZwCQDIxvDKOABkzJQHjisIJiBEQA8egmJAAACAAD/xQO8Az4ACwAYAAABIS4BNDYzITIWFAYBIiY1ETQ2MhYXEQ4BA538xQ0REQ0DOw0SEv5WDRISGhEBAREBYgERGhISGhH+YhINAzsNEREN/MUNEgB4nGNgZGBgAOL/btOXxfPbfGXgZmEAgRsM12wQ9P+jLAzMdkAuBwMTSBQAMQMKGgB4nGNgZGBgbvjfwBDDwgACQJKRARUwAQBHCAJrBAAAAAQAAAAAAAAAACwAAHicY2BkYGBgYpAEYgYwi4GBCwgZGP6D+QwACx8BNAAAeJxlj01OwzAQhV/6B6QSqqhgh+QFYgEo/RGrblhUavdddN+mTpsqiSPHrdQDcB6OwAk4AtyAO/BIJ5s2lsffvHljTwDc4Acejt8t95E9XDI7cg0XuBeuU38QbpBfhJto41W4Rf1N2MczpsJtdGF5g9e4YvaEd2EPHXwI13CNT+E69S/hBvlbuIk7/Aq30PHqwj7mXle4jUcv9sdWL5xeqeVBxaHJIpM5v4KZXu+Sha3S6pxrW8QmU4OgX0lTnWlb3VPs10PnIhVZk6oJqzpJjMqt2erQBRvn8lGvF4kehCblWGP+tsYCjnEFhSUOjDFCGGSIyujoO1Vm9K+xQ8Jee1Y9zed0WxTU/3OFAQL0z1xTurLSeTpPgT1fG1J1dCtuy56UNJFezUkSskJe1rZUQuoBNmVXjhF6XNGJPyhnSP8ACVpuyAAAAHicY2BigAAuBuyAiZGJkZmBJSCntJiBAQAJoAG+AAAA")
-      format("woff"),
-    url("./iconfont.ttf?t=1541059900364") format("truetype"),
-    /* chrome, firefox, opera, Safari, Android, iOS 4.2+*/
-      url("./iconfont.svg?t=1541059900364#iconfont") format("svg"); /* iOS 4.1- */
-}
-
-:global(.iconfont___Zy2_S2sEs7) {
-  font-family: "iconfont___Zy2_S2sEs7" !important;
-  font-size: 16px;
-  font-style: normal;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-:global(.icon-Plus:before) {
-  content: "\e608";
+  font-family: "iconfont"; /* project id 899757 */
+  src: url("//at.alicdn.com/t/font_899757_r0vnw09e7lr.eot");
+  src: url("//at.alicdn.com/t/font_899757_r0vnw09e7lr.eot?#iefix")
+      format("embedded-opentype"),
+    url("//at.alicdn.com/t/font_899757_r0vnw09e7lr.woff2") format("woff2"),
+    url("//at.alicdn.com/t/font_899757_r0vnw09e7lr.woff") format("woff"),
+    url("//at.alicdn.com/t/font_899757_r0vnw09e7lr.ttf") format("truetype"),
+    url("//at.alicdn.com/t/font_899757_r0vnw09e7lr.svg#iconfont") format("svg");
 }

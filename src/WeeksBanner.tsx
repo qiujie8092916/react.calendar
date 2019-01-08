@@ -1,11 +1,11 @@
 import React from "react";
-
-import "./commonStyle.css";
+import styled from "styled-components";
 
 interface WeeksBannerType {
   hasTip: boolean;
   weeks: string[];
   weekHeight: number;
+  className?: string;
 }
 
 class WeeksBanner extends React.PureComponent<WeeksBannerType, any> {
@@ -13,7 +13,7 @@ class WeeksBanner extends React.PureComponent<WeeksBannerType, any> {
     const { weekHeight, weeks } = this.props;
     return (
       <div
-        className="weeks flx"
+        className={`${this.props.className} weeks flx`}
         style={{
           height: `${weekHeight}rem`
         }}
@@ -36,4 +36,10 @@ class WeeksBanner extends React.PureComponent<WeeksBannerType, any> {
     );
   }
 }
-export default WeeksBanner;
+export default styled(WeeksBanner)`
+  font-size: 0.34rem;
+  background-color: #fff;
+  z-index: 999;
+  box-sizing: border-box;
+  padding: 0 0.26rem;
+`;

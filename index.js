@@ -1,3 +1,3 @@
-import Calendar from "./src/Calendar";
+import Calendar from "./src/index";
 
 export default Calendar;

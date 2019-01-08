@@ -60,10 +60,6 @@ export interface Config {
   showToday: boolean;
 }
 
-export interface ConfigExtend extends Config {
-  needTitle: boolean;
-}
-
 export interface HolidayOrigin {
   WorkDay: string;
   NoWorkDay: string;

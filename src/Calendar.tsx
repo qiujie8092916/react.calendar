@@ -326,19 +326,13 @@ class Calendar extends React.Component<CalendarType, CalendarState> {
       visible,
       startDate,
       dayConfig,
-      fullScreen,
-      isBareShell
+      fullScreen
     } = this.props;
     const { holidays, selectedDate } = this.state;
 
     if (visible) {
       return (
-        <AnimateFrame
-          visible={visible}
-          isBareShell={isBareShell}
-          fullScreen={fullScreen}
-          toRoof={toRoof}
-        >
+        <AnimateFrame visible={visible} fullScreen={fullScreen} toRoof={toRoof}>
           <Context.Provider value={this.opt}>
             <Datepicker
               conf={this.conf}

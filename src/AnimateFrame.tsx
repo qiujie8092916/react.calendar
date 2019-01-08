@@ -1,29 +1,22 @@
 import React from "react";
 import styled from "styled-components";
+// import { cldFadeIn, cldFadeOut, cldSlideInUp, cldSlideInDown } from "./index";
+import "./styles.css";
 
 interface AnimateFrameType {
-  isBareShell: boolean;
   fullScreen: boolean;
   toRoof: string;
   visible: boolean;
+  className?: string;
 }
 
 class AnimateFrame extends React.Component<AnimateFrameType> {
   render() {
-    const { toRoof, visible, fullScreen, isBareShell } = this.props;
+    const { toRoof, fullScreen } = this.props;
     return (
       <div
-        className="animated fixed"
-        style={Object.assign(
-          {
-            background: "#fff",
-            display: visible ? "block" : "none",
-            height: "100%",
-            width: "100%",
-            zIndex: 1111
-          },
-          isBareShell ? { top: !fullScreen ? toRoof : 0 } : {}
-        )}
+        className={`${this.props.className} animated fixed`}
+        style={{ top: !fullScreen ? toRoof : 0 }}
       >
         {this.props.children}
       </div>
@@ -32,11 +25,25 @@ class AnimateFrame extends React.Component<AnimateFrameType> {
 }
 
 export default styled(AnimateFrame)`
-  .animated {
+  background: #fff;
+  display: ${(props: AnimateFrameType) => (props.visible ? "block" : "none")};
+  height: 100%;
+  width: 100%;
+  z-index: 1111;
+  &.animated {
     animation-duration: 0.35s;
     animation-fill-mode: both;
-  }
-  .fixed {
-    position: fixed;
+    &.fade-enter {
+      animation-name: cldFadeIn;
+    }
+    &.fade-leave {
+      animation-name: cldFadeOut;
+    }
+    &.slideV-enter {
+      animation-name: cldSlideInUp;
+    }
+    &.slideV-leave {
+      animation-name: cldSlideInDown;
+    }
   }
 `;
