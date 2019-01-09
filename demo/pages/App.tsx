@@ -15,10 +15,9 @@ class App extends React.Component<any> {
     minDate: new Date(2018, 8, 21),
     singleDate: new Date(2018, 9, 15),
     toggleCalender: false,
-    dayConfig: {}
+    dayConfig: {},
+    selectedType: 2
   };
-
-  selectedType = 2;
 
   componentDidMount() {
     setTimeout(() => {
@@ -110,19 +109,29 @@ class App extends React.Component<any> {
       minDate,
       maxDate,
       dayConfig,
-      toggleCalender
+      toggleCalender,
+      selectedType
     } = this.state;
     return (
       <div className={this.props.className}>
         <button onClick={() => this.toggleHandler(true)}>选择日期</button>
+        {this.state.selectedType === 1 ? (
+          <p>
+            Selected:{" "}
+            <em>{moment(this.state.singleDate).format("YYYY-MM-DD")}</em>
+          </p>
+        ) : (
+          <p>
+            Selected: <em>{moment(this.state.minDate).format("YYYY-MM-DD")}</em>{" "}
+            ~ <em>{moment(this.state.maxDate).format("YYYY-MM-DD")}</em>
+          </p>
+        )}
         <Calendar
           tip={"价格变动频繁，以实际成交价为准"}
           startDate={startDate}
           endDate={endDate}
           selectType={2}
-          selectedDate={
-            this.selectedType === 1 ? [singleDate] : [minDate, maxDate]
-          }
+          selectedDate={selectedType === 1 ? [singleDate] : [minDate, maxDate]}
           festivalCover
           visible={toggleCalender}
           calendarType={1}
@@ -142,6 +151,14 @@ class App extends React.Component<any> {
 
 export default styled(App)`
   overflow: hidden;
+  p {
+    font-size: 0.4rem;
+    text-align: center;
+    margin-top: 0.2rem;
+    em {
+      font-weight: bold;
+    }
+  }
   button {
     border: 1px solid #666;
     background: #fff;
