@@ -48,7 +48,7 @@ class App extends React.Component<any> {
             title: "¥228"
           },
           20180910: {
-            title: "¥998"
+            title: "¥999"
           }
         }
       });

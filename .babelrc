@@ -14,5 +14,5 @@
       }
     ]
   ],
-  "plugins": ["transform-class-properties"]
+  "plugins": ["transform-class-properties", "lodash"]
 }
