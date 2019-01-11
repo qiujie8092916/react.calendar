@@ -26,12 +26,10 @@
     "whatwg-fetch": "2.0.3"
   },
   "scripts": {
-    "clean:build": "rimraf ./build/*",
-    "clean:lib": "rimraf ./lib/*",
     "start": "node scripts/start.js",
-    "build:dev": "npm run clean:build && node scripts/build.js --progress",
-    "build:pub": "npm run clean:lib && cross-env webpack --config scripts/pub.js --progress --display-error-details --display-max-modules 0 --colors",
-    "build": "npm run build:dev && npm run build:pub",
+    "clean:dev": "rimraf ./build/*",
+    "build:dev": "cross-env node scripts/build.js --progress --display-error-details --display-max-modules 0 --colors",
+    "build": "npm run clean:dev && npm run build:dev",
     "test": "node scripts/test.js --env=jsdom",
     "analyz": "NODE_ENV=production npm_config_report=true npm run build"
   },
@@ -86,7 +84,7 @@
     "webpack-merge": "^4.2.1"
   },
   "description": "``` import Calendar from 'react-calendar' ```",
-  "main": "index.js",
+  "main": "lib/index.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/qiujie8092916/react.calendar.git"

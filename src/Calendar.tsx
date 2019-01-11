@@ -213,7 +213,7 @@ class Calendar extends React.Component<CalendarType, CalendarState> {
     return dates;
   };
 
-  getHolidayData: () => Promise<{}> = () => {
+  getHolidayData: () => Promise<HolidayOrigin> = () => {
     const holidayCache = window.localStorage.getItem(CACHE);
     if (
       !holidayCache ||
@@ -257,7 +257,7 @@ class Calendar extends React.Component<CalendarType, CalendarState> {
                   queryYear: moment().year()
                 })
               );
-              resolve(this.holidayConvert(originHolidays));
+              resolve(this.holidayConvert(originHolidays) as HolidayOrigin);
             } else {
               reject(data.errMsg);
             }
@@ -265,7 +265,9 @@ class Calendar extends React.Component<CalendarType, CalendarState> {
       });
     } else {
       return new Promise(resolve => {
-        resolve(this.holidayConvert(JSON.parse(holidayCache).data));
+        resolve(this.holidayConvert(
+          JSON.parse(holidayCache).data
+        ) as HolidayOrigin);
       });
     }
   };

@@ -2,7 +2,6 @@ import React from "react";
 import ReactDOM from "react-dom";
 import App from "./pages/App";
 import Rem from "./common/js/rem";
-import registerServiceWorker from "./registerServiceWorker";
 
 ReactDOM.render(
   <Rem vw="10">
@@ -10,4 +9,3 @@ ReactDOM.render(
   </Rem>,
   document.getElementById("root")
 );
-registerServiceWorker();

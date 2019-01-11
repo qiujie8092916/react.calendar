@@ -22,7 +22,7 @@
     "downlevelIteration": true,
     "skipLibCheck": true
   },
-  "include": ["typings/*.d.ts", "src/**/*", "demo/**/*"],
+  "include": ["typings/*.d.ts", "src/**/*", "examples/**/*"],
   "exclude": [
     "node_modules",
     "build",

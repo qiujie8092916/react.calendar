@@ -1,6 +1,6 @@
 /* tslint:disable: object-literal-sort-keys */
 import React from "react";
-import Calendar from "./../../src/index";
+import Calendar from "../../src/index";
 import moment from "moment";
 import styled from "styled-components";
 import { DateObject } from "../../src/propTypes";
