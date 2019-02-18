@@ -1,23 +1,24 @@
-import React from "react";
-import axios from "axios";
-import moment from "moment";
-import { isEmpty } from "lodash";
-import Animate from "rc-animate";
-import { Context } from "./context";
+import React from 'react';
+import axios from 'axios';
+import moment from 'moment';
+import { isEmpty } from 'lodash';
+import Animate from 'rc-animate';
+import { Context } from './context';
 import {
   CalendarType,
   Config,
   HolidayOrigin,
   defaultSelectedDate
-} from "./propTypes";
+} from './propTypes';
 
-import "./extensions";
-import "./icon/iconfont.css";
-import AnimateFrame from "./AnimateFrame";
-import Datepicker from "./Datepicker";
-import DatepickerMask from "./DatepickerMask";
+import '../../icon/iconfont.css';
 
-const CACHE = "REACT_CALENDAR_DATA_CACHE";
+import './extensions';
+import AnimateFrame from './AnimateFrame';
+import Datepicker from './Datepicker';
+import DatepickerMask from './DatepickerMask';
+
+const CACHE = 'REACT_CALENDAR_DATA_CACHE';
 
 interface HolidayDrill {
   [propName: string]: HolidayOrigin;
@@ -47,9 +48,9 @@ class Calendar extends React.Component<CalendarType, CalendarState> {
     showFestival: true,
     showHolidayInfo: true,
     showToday: true,
-    tip: "",
-    title: "请选择日期",
-    toRoof: "2rem"
+    tip: '',
+    title: '请选择日期',
+    toRoof: '2rem'
   };
 
   private months: string[];
@@ -86,7 +87,7 @@ class Calendar extends React.Component<CalendarType, CalendarState> {
         if (onConfirm) {
           onConfirm({
             date: selectedDate[0],
-            std: moment(selectedDate[0]).format("YYYY-MM-DD")
+            std: moment(selectedDate[0]).format('YYYY-MM-DD')
           });
         }
         break;
@@ -95,11 +96,11 @@ class Calendar extends React.Component<CalendarType, CalendarState> {
           onConfirm(
             {
               date: selectedDate[0],
-              std: moment(selectedDate[0]).format("YYYY-MM-DD")
+              std: moment(selectedDate[0]).format('YYYY-MM-DD')
             },
             {
               date: selectedDate[1],
-              std: moment(selectedDate[1] as Date).format("YYYY-MM-DD")
+              std: moment(selectedDate[1] as Date).format('YYYY-MM-DD')
             }
           );
         }
@@ -146,7 +147,7 @@ class Calendar extends React.Component<CalendarType, CalendarState> {
       onCancel: this.onCancel,
       onSelect: this.onSelect
     };
-    this.months = this.enumerateBetweenDates(startDate, endDate, "M");
+    this.months = this.enumerateBetweenDates(startDate, endDate, 'M');
   };
 
   onSelect: (tick: number) => void = tick => {
@@ -160,7 +161,7 @@ class Calendar extends React.Component<CalendarType, CalendarState> {
     const oldDate = this.state.selectedDate;
     const newDate = {
       date: tickNow,
-      std: moment(tick).format("YYYY-MM-DD")
+      std: moment(tick).format('YYYY-MM-DD')
     };
     switch (selectType) {
       case 1:
@@ -198,10 +199,10 @@ class Calendar extends React.Component<CalendarType, CalendarState> {
     const lastDate = moment(endDate)
       .clone()
       .startOf(type);
-    if (type === "M") {
-      format = "YYYY-MM";
+    if (type === 'M') {
+      format = 'YYYY-MM';
     } else {
-      format = "YYYYMMDD";
+      format = 'YYYYMMDD';
     }
     while (currDate.diff(lastDate, type) <= 0) {
       const m = moment(currDate.clone().toDate()).format(format);
@@ -222,9 +223,9 @@ class Calendar extends React.Component<CalendarType, CalendarState> {
       return new Promise((resolve, reject) => {
         axios
           .post(
-            "http://m.ctrip.com/restapi/soa2/12378/json/getGeneralConfigData",
+            'http://m.ctrip.com/restapi/soa2/12378/json/getGeneralConfigData',
             {
-              key: "Holiday"
+              key: 'Holiday'
             }
           )
           .then(({ data }) => {
@@ -278,8 +279,8 @@ class Calendar extends React.Component<CalendarType, CalendarState> {
       h[year] = {};
       obj[year].forEach((holiday: HolidayOrigin) => {
         const { HolidayCount } = holiday;
-        const workDay = holiday.WorkDay.split(",");
-        const noWorkDay = holiday.NoWorkDay.split(",");
+        const workDay = holiday.WorkDay.split(',');
+        const noWorkDay = holiday.NoWorkDay.split(',');
 
         h[year][year + holiday.HolidayDay] = holiday;
 
@@ -288,13 +289,13 @@ class Calendar extends React.Component<CalendarType, CalendarState> {
           for (let i = 0; i <= HolidayCount; i++) {
             if (
               !moment(year + holiday.StartDay.trim())
-                .add(i, "day")
+                .add(i, 'day')
                 .isAfter(moment(year + holiday.EndDay.trim()))
             ) {
               h[year][
                 moment(year + holiday.StartDay.trim())
-                  .add(i, "day")
-                  .format("YYYYMMDD")
+                  .add(i, 'day')
+                  .format('YYYYMMDD')
               ] = { ...holiday, isDayOfRest: true };
             }
           }

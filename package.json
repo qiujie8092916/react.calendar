@@ -28,8 +28,11 @@
   "scripts": {
     "start": "node scripts/start.js",
     "clean:dev": "rimraf ./build/*",
+    "clean:pub": "rimraf ./lib/*",
     "build:dev": "cross-env node scripts/build.js --progress --display-error-details --display-max-modules 0 --colors",
+    "build:pub": "cross-env webpack --config scripts/pub.js --progress --display-error-details --display-max-modules 0 --colors",
     "build": "npm run clean:dev && npm run build:dev",
+    "pub": "npm run clean:pub && npm run build:pub",
     "test": "node scripts/test.js --env=jsdom",
     "analyz": "NODE_ENV=production npm_config_report=true npm run build"
   },

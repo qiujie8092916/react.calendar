@@ -1,16 +1,15 @@
 /* tslint:disable: object-literal-sort-keys */
-import React from "react";
-import Calendar from "../../src/index";
-import moment from "moment";
-import styled from "styled-components";
-import { DateObject } from "../../src/propTypes";
+import React from 'react';
+import Calendar from '../../src/index.js';
+import moment from 'moment';
+import styled from 'styled-components';
 
-import "./App.css";
+import './App.css';
 
 class App extends React.Component<any> {
   state = {
-    startDate: new Date(moment("2018-06-02").valueOf()),
-    endDate: new Date(moment("2019-01-10").valueOf()),
+    startDate: new Date(moment('2018-06-02').valueOf()),
+    endDate: new Date(moment('2019-01-10').valueOf()),
     maxDate: new Date(2018, 9, 2),
     minDate: new Date(2018, 8, 21),
     singleDate: new Date(2018, 9, 15),
@@ -28,26 +27,26 @@ class App extends React.Component<any> {
       this.setState({
         dayConfig: {
           20180601: {
-            title: "¥1262"
+            title: '¥1262'
           },
           20180602: {
-            title: "¥99"
+            title: '¥99'
           },
           20180604: {
-            title: "¥888"
+            title: '¥888'
           },
           20180605: {
             disable: true,
-            title: "¥998"
+            title: '¥998'
           },
           20180618: {
-            title: "¥123"
+            title: '¥123'
           },
           20180903: {
-            title: "¥228"
+            title: '¥228'
           },
           20180910: {
-            title: "¥999"
+            title: '¥999'
           }
         }
       });
@@ -67,20 +66,20 @@ class App extends React.Component<any> {
       this.setState({
         dayConfig: Object.assign({}, this.state.dayConfig, {
           20180910: {
-            title: "¥2002"
+            title: '¥2002'
           }
         })
       });
     }, 4000);
   }
 
-  selectedHandler = (date: DateObject) => {
+  selectedHandler = date => {
     console.log(date.std);
   };
 
-  confirmHandler = (...selected: DateObject[]) => {
+  confirmHandler = (...selected) => {
     console.log(
-      `confirm: ${selected[0].std}${selected[1] ? ` - ${selected[1].std}` : ""}`
+      `confirm: ${selected[0].std}${selected[1] ? ` - ${selected[1].std}` : ''}`
     );
 
     if (selected[1]) {
@@ -117,17 +116,17 @@ class App extends React.Component<any> {
         <button onClick={() => this.toggleHandler(true)}>选择日期</button>
         {this.state.selectedType === 1 ? (
           <p>
-            Selected:{" "}
-            <em>{moment(this.state.singleDate).format("YYYY-MM-DD")}</em>
+            Selected:{' '}
+            <em>{moment(this.state.singleDate).format('YYYY-MM-DD')}</em>
           </p>
         ) : (
           <p>
-            Selected: <em>{moment(this.state.minDate).format("YYYY-MM-DD")}</em>{" "}
-            ~ <em>{moment(this.state.maxDate).format("YYYY-MM-DD")}</em>
+            Selected: <em>{moment(this.state.minDate).format('YYYY-MM-DD')}</em>{' '}
+            ~ <em>{moment(this.state.maxDate).format('YYYY-MM-DD')}</em>
           </p>
         )}
         <Calendar
-          tip={"价格变动频繁，以实际成交价为准"}
+          tip={'价格变动频繁，以实际成交价为准'}
           startDate={startDate}
           endDate={endDate}
           selectType={2}
@@ -136,8 +135,8 @@ class App extends React.Component<any> {
           visible={toggleCalender}
           calendarType={1}
           fullScreen={false}
-          isBareShell={true}
-          toRoof={"3rem"}
+          isBareShell
+          toRoof={'3rem'}
           title="请选择日期test"
           dayConfig={dayConfig}
           onSelect={this.selectedHandler}
